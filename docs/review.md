@@ -22,14 +22,14 @@
 
 ## Decisions for people
 
-- **Now:** return an independent review or approve the first local milestone. An agent with existing authorized repository access can review the committed files. The reviewer needs no cloud credentials.
+- Return an independent review or approve the first local milestone. The reviewer can clone the public repository and reproduce the evidence without cloud credentials.
 - **Before a survey pilot or public release:** the institutional data steward confirms indicator populations, permitted aggregates, source rights and disclosure rules. The owner confirms institutional sponsorship, licensing, publication and branding. Development can proceed locally after the first gate.
-- **When hosting is needed:** use a separate Aamu AI Supabase project in an approved EU region. Verify any incremental charge and choose the institution-controlled production account. Vercel deployment and Arvo procurement have their own later decisions.
+- Before hosting, verify the Supabase project's region, costs, production ownership and deployment settings. The owner has connected Supabase to GitHub. Vercel deployment and Arvo procurement have their own later decisions.
 
 ## Prompt for the independent reviewer
 
 ```text
-Review the private Aamu-AI/higher-education-analytics repository as an independent senior engineer and statistical reviewer. Read README.md, docs/data.md, docs/plan.md, docs/architecture.md and the research evidence. Reproduce the Arcada 2024 check and challenge at least one proposed comparison using a primary source.
+Review https://github.com/Aamu-AI/higher-education-analytics as an independent senior engineer and statistical reviewer. Record the commit you review. Read README.md, docs/data.md, docs/plan.md, docs/architecture.md and the research evidence. Run the discovery commands in the README. Reproduce the Arcada 2024 degree check and challenge at least one proposed comparison using a primary source.
 
 Decide whether to approve the first local milestone, request revisions, or block it. Examine population and denominator definitions, release completeness, code mappings, suppression and differencing, import retries and corrections, source terms, institutional isolation, user decisions, accessibility, operating costs and portability. Identify anything the proposal should remove or defer.
 
