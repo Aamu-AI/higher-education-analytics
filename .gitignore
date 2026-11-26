@@ -8,4 +8,6 @@ __pycache__/
 supabase/.temp/
 supabase/.branches/
 research-local/
+test-results/
+playwright-report/
 vipunen-avop-dashboard-example.png
