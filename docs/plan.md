@@ -1,10 +1,10 @@
-# Product plan for independent review
+# Product plan
 
-## Decision requested
+## Approved local milestone
 
-Approve a local milestone that imports final degree awards for Finnish universities of applied sciences (UAS) and reconciles Arcada with published figures. A programme director should be able to take the same comparison into next year's review and explain exactly who and what it covers. Degree awards have a manageable first slice, education codes and an external check. The supplied AVOP example remains the design reference for a later feedback page.
+The independent review approved local work once the degree definition and reconciliation criteria were revised. Both changes are in this plan. Begin with final degree awards for all Vipunen universities of applied sciences (UAS) for 2023–2025. Use 2025 as the main acceptance case and 2024 and 2023 as regressions. The deliverables are SQL views and one local CSV with release metadata. [Review decision](review.md)
 
-The first milestone ends at verified database queries. The first user-facing release adds an overview and comparison page. Hosting, authentication, unrestricted exploration, personal records, AI, research metrics and funding projections are outside this release. The broader product includes demand, progression, outcomes and feedback as their definitions and sources qualify.
+Offer two indicators: **degrees, all funding sources (national statistics definition)** and **degrees excluding commissioned education (Arcada reporting definition)**. Compare peers under the same selected definition. Arcada awarded 561 degrees on its reporting definition in 2025, one fewer than in 2024. The national definition gives 573, eleven more. Show the definition alongside each count.
 
 ## Decisions people need to make
 
@@ -12,20 +12,22 @@ These are hypotheses from the brief and available statistics. Interviews and usa
 
 | User and occasion | Question | Evidence and action |
 | --- | --- | --- |
-| Leadership preparing the annual review | Which fields account for the change in degrees? | Compare two final years, show the absolute contribution by field, inspect the level mix and decide which fields warrant discussion. A large institution's count conveys volume only. |
+| Leadership preparing the annual review | How close was each steering field to its bachelor’s degree target under the ministry agreement? | Show awards and targets together. Discuss where the gap warrants action, with counts by national qualification and funding source available for follow-up. |
 | Programme director preparing an intake review | Did demand or degree output change for the education we offer? | Begin with the comparable field or national qualification. Show intake options separately by round and language when available. Confirm local programme mappings with the director before attributing results or changing intake. |
 | Quality lead preparing a development meeting | Which feedback themes changed, and who responded? | Review question wording, distribution or mean, valid respondent count, coverage, scale and benchmark. Seek qualitative follow-up for persistent differences. A movement in rank alone carries little decision value. |
 | Institutional analyst signing off a board paper | Can I reproduce this exact number after the source changes? | Export the selected aggregate, definition version, period, release and filters. Retain a release-specific link or manifest under the applicable terms. |
 
-Validate these hypotheses with one representative of each principal role. Ask them to reproduce last year’s board statistic, identify one field to investigate and explain one unavailable comparison. Record their source, time taken, any mistaken interpretations and the reason for the decision. Use the findings to set language priorities and select the next indicator.
+Arcada's 2025 agreement view would show **477 bachelor’s degrees against a target of 635**. Health and welfare achieved 205 of 300, technology and ICT 71 of 120, economy and services 143 of 170, and arts and culture 58 of 45. Keep targets, field mappings, agreement period, source and owner in institution configuration. Group the six ministry policy fields for 2025. The older funding-model column is only a historical cross-check. Ask Arcada’s statistics contact to confirm the exclusion and mapping in writing. [Evidence and exceptions](data.md)
+
+Before milestone 2, interview a manager, a programme director and a quality lead. Ask each to reproduce a board statistic, identify a field for discussion and explain one unavailable comparison. Record decisions, misunderstandings and language needs. These interviews can run alongside milestone 1.
 
 ## Dashboard concept
 
-The supplied Karelia example brings four useful items together: question-by-year table, respondent volume and score trend, question groups and a peer table. The side filters distinguish bachelor’s and master’s education, year, institution, question group and question. Its 5.5 target belongs to Karelia. The October 2026 refresh illustrates the danger of comparing an incomplete year to a full year. Neither its numbers nor its branding are source material for the application.
+A future feedback view can combine a question-by-year table, respondent counts, score trends and peer comparisons. Label partial years and use only an institution’s own approved targets.
 
 | Screen | Initial content and interaction |
 | --- | --- |
-| Overview | Institution picker defaults to Arcada. Show the latest *validated final* year, degree awards, change from previous final year and a bachelor’s/master’s split. Follow with a short trend, field contribution table and a source link. A different institution uses the identical query. |
+| Overview | Default to Arcada’s latest validated final year. Lead with bachelor’s awards and agreement targets by steering field. Show each difference in degrees, the previous year, definition and release. An institution without an approved target sees counts and an unavailable target. |
 | Compare | Carry the indicator, year, level and field across pages. Choose Finnish UAS peers. Show selected institutions side by side, an explicitly labelled sector total where validated, and comparison coverage. Sort by name initially. Make changes in peer membership visible. |
 | Indicator detail | Show source, unit, reference population, release date, definition, known breaks and calculation next to the number. Allow switching between chart and equivalent table. CSV uses the same approved cells and includes metadata. |
 | Feedback, once qualified | Show one theme and year at a time. Separate score and respondent count into aligned panels with separate units. Offer the question matrix as detail and the peer comparison on demand. Display a local target only when its owner, scale and effective dates are known. |
@@ -38,10 +40,10 @@ For counts, compare absolute change and base volume. Offer percent change only f
 
 | Order | Deliverable | Observable acceptance |
 | --- | --- | --- |
-| 0. Independent review | These plans, reproducible probes and open issues | Reviewer can run the check from a clean checkout, identify the data boundary and challenge the proposed first metric. Owner supplies feedback or approval. |
-| 1. Local foundation | One Vipunen adapter, versioned SQL migrations, final UAS degree aggregates, import history, unit and database tests in CI | Start with 2023 and 2024, Arcada and one peer, then all UAS for those years. Reproduce the 2024 Arcada total of 562 and both levels. Reconcile a second institution against StatFin. An identical import changes no facts. A revised or removed source row replaces the old slice. A failed or concurrent import keeps the last complete release available. Clean database rebuild passes. |
-| 2. First usable analytics release | Overview, field detail, peer comparison and contextual export | A user can explain the year-on-year change, switch institutions, identify exclusions and reproduce the CSV from the recorded release. Desktop, mobile, keyboard and table views show consistent results. A programme filter appears only for mappings that have been verified. |
-| 3. Extend by decision value | Admissions by intake option, on-time degrees among graduates, then feedback pilot | Every new series has a named owner, licence record, denominator or unit, period policy, source check and tests for suppressed cells. Admit AVOP earlier if a reusable public aggregate meets those conditions. |
-| 4. Institutional extensions | Restricted Arvo pilot, Entra sign-in and local programme mappings as needed | Proceed when the institution owns the infrastructure and approves recipients, retention, transfer and export rules. Test access boundaries with synthetic data. Saved reports, scheduling and grounded natural-language queries can reuse the published indicators later. |
+| 0. Independent review | Completed on 26 November 2026 | Findings, corrections and outstanding questions are in the [review record](review.md). |
+| 1. Local degree awards | Plain PostgreSQL, numbered SQL migrations, one Python importer for `opiskelijat_ja_tutkinnot`, SQL views and one local CSV | Load final UAS years 2023–2025. Retain funding source at qualification level. Pass the Arcada, Laurea and named-sector checks, the release and rollback tests, and a clean rebuild against a PostgreSQL service in CI. Include the indicator definition, year, source and release in the CSV. [Import contract](architecture.md) |
+| 2. First management view | Choose a static read-only site or a hosted application after the three interviews | A user can identify the largest target gap, see both degree definitions, explain peer coverage and reproduce a displayed value from its release. Verify WCAG 2.1 AA with keyboard, screen reader, equivalent tables, narrow screens and 200%–400% zoom and reflow. Confirm the applicability of Finland’s Act on the Provision of Digital Services with Arcada. [Act 306/2019](https://www.finlex.fi/en/legislation/2019/306) |
+| 3. Additional indicators | Admissions, progression, graduate outcomes or public feedback, in interview priority order | Define population, unit, period, coverage and rights for each series. Investigate new-student differences before admissions. Verify denominators and suppression rules before a survey pilot. |
+| 4. Institutional extensions | Signed local programme mappings, restricted sources and access controls as needed | Arcada approves the mapping from its register, the permitted recipients, retention and exports. Test access boundaries with synthetic data. |
 
-The priority changes if programme directors chiefly need a documented survey measure and a public export of sufficient quality becomes available. Reorder the feedback pilot after a source audit and user interview. No elapsed-time estimate substitutes for passing the reconciliation checks.
+The finest public breakdown is national qualification code and funding source. Multiple programmes or languages can share a code. A local programme view requires a register-based mapping signed off by Arcada. Web development, hosting and survey ingestion are later decisions.

@@ -6,15 +6,53 @@ On 26 November 2026, Vipunen listed **47 resources**. We profiled 29 tertiary, r
 
 A reviewer can request `/resources/{name}`, `/data/count` and `/data?limit=1` under that resource. Discovery tested an encoded FIQL filter (the API's filtering language), sorted period endpoints, and a complete small filtered response. The contract exposes offset and limit. It gives no release pin, stable default order or deletion feed. The JSON resource description contains field names and types. Population definitions and reuse terms need additional sources. [Reproduction commands](../README.md)
 
-### Audit of Arcada's 2024 result
+### Degree awards and students at Arcada
 
-| Publication or query | Bachelor's | Master's | Total degrees | Students |
-| --- | ---: | ---: | ---: | ---: |
-| Vipunen, final 2024 rows for institution code `02535` | 478 | 84 | 562 | 2,705 |
-| StatFin table 13k9, same code, year and totals | | | 562 | 2,705 |
-| Arcada's 2024 annual review and key figures | 478 | 84 | 562 | 2,653 |
+Observed 26 November 2026. Both national publications include all funding sources. Arcada’s 2025 Swedish annual report explicitly excludes degrees completed in commissioned education. In Vipunen’s awards resource this means excluding precisely `rahoituslahde = 'Maksullinen tilauskoulutus'`. Retain tuition-fee degrees. The last column below applies the same funding filter to the student measure. [2025 annual report, Tables 1 and 2](https://www.arcada.fi/sites/default/files/2026-04/Arcada%20University%20of%20Applied%20Sciences%20Annual%20Report%202025%20in%20Swedish.pdf) · [2024 annual report, Tables 1 and 2](https://www.arcada.fi/sites/default/files/2025-06/Yrkesh%C3%B6gskolan%20Arcadas%20verksamhetsber%C3%A4ttelse%202024.pdf) · [StatFin 13k9](https://pxdata.stat.fi/PxWeb/pxweb/en/StatFin/StatFin__opiskt/13k9.px/) · [Executable comparison](../research/check_arcada.py)
 
-The Vipunen filter selected 240 rows. We summed `tutkinnot` within each `koulutusasteTaso2` and summed `opiskelijat` separately. StatFin returned a two-cell CSV from a POST to its live `opiskt/13k9.px` endpoint. The degree split is a regression target for milestone 1. The 52-student difference is unresolved. Reconcile census date, attendance, study rights and population before publishing an Arcada headline for student numbers. The two national publications may share upstream registers. Agreement checks publication and aggregation, without establishing independent measurement. [Reproducible check](../research/check_arcada.py) · [StatFin table](https://pxdata.stat.fi/PxWeb/pxweb/en/StatFin/StatFin__opiskt/13k9.px/) · [Arcada key figures](https://www.arcada.fi/en/about-us/annual-reports/annual-report-2024) · [Arcada annual review](https://www.arcada.fi/sites/default/files/2025-06/Yrkesh%C3%B6gskolan%20Arcadas%20verksamhetsber%C3%A4ttelse%202024.pdf)
+| Final year | National degrees, bachelor + master | Vipunen excluding commissioned | Arcada report | Students, all − commissioned = report |
+| --- | --- | --- | --- | --- |
+| 2025 | 489 + 84 = 573 | 477 + 84 = 561 | 561 | 2,899 − 30 = 2,869 |
+| 2024 | 478 + 84 = 562 | 478 + 84 = 562 | 562 | 2,705 − 52 = 2,653 |
+| 2023 | 470 + 74 = 544 | 470 + 74 = 544 | 546 | 2,653 − 0 = 2,653 |
+
+The 12 commissioned awards in 2025 were four nursing degrees (671101) and eight public health nursing degrees (671103). In 2024 there were zero commissioned awards in 240 Arcada source rows. That explains the 562 under both definitions and why 2025 is the stronger test. The student arithmetic resolves the earlier 52-student question. Request written confirmation of the degree rule and student population from Arcada’s statistics contact.
+
+| Arcada annual report cell | 2025 | 2024 | 2023 |
+| --- | ---: | ---: | ---: |
+| Table 1, technology | 57 | 34 | 37 |
+| Services | 14 | 22 | 22 |
+| Arts and culture | 74 | 67 | 47 |
+| ICT | 28 | 32 | 38 |
+| Health and welfare | 235 | 249 | 253 |
+| Business | 153 | 158 | 149 |
+| Table 2, arts and culture (bachelor) | 58 | 57 | 32 |
+| Health and welfare (bachelor) | 205 | 217 | 226 |
+| Economy and services (bachelor) | 143 | 154 | 144 |
+| Technology and ICT (bachelor) | 71 | 50 | 70 |
+
+After the funding exclusion, the six policy fields in `okmOhjauksenAla` reproduce both 2025 and 2024 tables. For Table 2 combine business with services, and technology with ICT. Arts and health each stand alone. The historical `rahoitusmallialaAmk2021-2024` grouping also yields the four 2025 counts. The source has no 2025–2028 funding-field column. Store Arcada’s agreement and mapping separately, pending its written confirmation. The same grouping localizes the 2023 discrepancy.
+
+### Expected differences
+
+| Period and status | Named sides and expected difference | Evidence needed for resolution |
+| --- | --- | --- |
+| Arcada 2023, unexplained | Report minus final Vipunen awards = **+2** bachelors (472 − 470). StatFin also gives 470. Vipunen’s on-time resource with observation date 1 April 2026 gives 472. Business bachelors are 123 there and 121 in the awards resource. Table 1 business is 149 vs 147 **across both levels**. Table 2 economy and services is 144 vs 142. | Arcada’s authorized statistics contact checks its 2023 business bachelor award list, award dates and funding sources inside the register. Record the aggregate explanation only. |
+| Laurea 2024, unexplained | Final Vipunen awards minus StatFin 13k9 = **+1** bachelor (1,948 − 1,947). All of it occurs in qualification 631101 (528 − 527). | Ask Vipunen or Statistics Finland to reconcile the releases for institution 02629 and code 631101. |
+
+Across the 22 common institutions in 2022–2025, we compared degrees and students by institution, bachelor/master level and qualification code. The only numeric award difference was the Laurea cell. Student totals matched. Full-time and part-time bachelors are combined in StatFin. Preserve each source’s values and the signed difference until its publisher explains it. The related `yamk_tutkinnot` resource also gives Arcada 74, 84 and 84 master's awards in 2023–2025.
+
+New students need their own reconciliation before admissions work. Institution totals differed by one to three in 37 of 88 comparisons. Arcada 2025 was 1,064 in Vipunen and 1,065 in StatFin. Both gave 414 men. Women were 650 vs 651, accounting for the difference. StatFin’s unknown category had no numeric value.
+
+### Sector coverage and source behaviour
+
+In 2024 Vipunen counted 33,338 degrees at its 22 UAS. StatFin counted 33,771 at 24 institutions. StatFin additionally includes Åland UAS (10031, 61 degrees) and the Police University College (02557, 373). StatFin minus Vipunen is 433 = 61 + 373 − 1, after Laurea. Every published sector total must carry its constituent institution codes. The reconciliation prints and checks both complete membership lists.
+
+Final Vipunen UAS slices contained 7,948, 8,303, 8,331 and 8,529 rows for 2022–2025 respectively. A bounded single fetch of 2024 matched the paged result as a multiset. The [source-row key](architecture.md) was unique across 33,111 rows. The source publishes numeric cells of one. Preserve observed counts and distinguish missing observations from zero. Defer report-specific suppression and differencing controls to survey sources.
+
+The resource-wide update stamp was 28 September 2026 across years. It cannot identify a changed year. For 2026, 15,901 preliminary (`Ennakko`) rows covered all sectors, including 6,907 UAS rows. Keep those outside the final series. Source vocabulary also varies: tuition appears as `Lukukausimaksu` in awards and `Lukuvuosimaksu` in the master's and on-time resources. Commissioned education appears as `Tilauskoulutus` in the on-time resource. [Resource catalogue](https://api.vipunen.fi/api/resources)
+
+Arcada’s 2024 awards covered 25 national qualification codes. Qualifying as a nurse can cover both Swedish- and English-language programmes. Among the three degree resources checked, only the on-time resource supplies `koulutuskieli`. Arcada bachelor awards there had unknown language in 2022–2024 and 374 Swedish and 115 English in 2025, including commissioned education. These counts cannot identify local programmes. Keep the public breakdown at qualification code and funding source pending signed register mappings.
 
 ## Vipunen resources
 
@@ -46,7 +84,7 @@ Other profiled candidates include commissioned and noncommissioned theses, conti
 
 | Source | Verified route and evidence | Next qualification check |
 | --- | --- | --- |
-| AVOP graduating-student feedback | Survey operator publishes national aggregates in Vipunen. A publisher analysis covered 161,982 respondents in 2016–2022 using a 1–7 scale. Arvo documentation describes annual public updates in early February. The private reference image shows a separate in-year view. | Obtain a downloadable public aggregate and report explanation. Verify latest complete cohort, question versions, bachelor/master coverage, weights, valid counts, eligible graduates, field/degree cuts and allowed redistribution. |
+| AVOP graduating-student feedback | Survey operator publishes national aggregates in Vipunen. A publisher analysis covered 161,982 respondents in 2016–2022 using a 1–7 scale. Arvo documentation describes annual public updates in early February. | Obtain a downloadable public aggregate and report explanation. Verify latest complete cohort, question versions, bachelor/master coverage, weights, valid counts, eligible graduates, field/degree cuts and allowed redistribution. |
 | UAS career follow-up | Annual survey of bachelor's and master's graduates five years after graduation. The UAS network links public results, a Power BI view and reports for the 2013, 2014 and 2015 graduating cohorts. Public updates follow each survey with a variable lag. | Keep survey year, graduation cohort and valid respondents separate. Confirm published aggregation, sample size, response rate and cross-year comparability for the chosen question. Full public file range and size are unverified. |
 | Vipunen workbooks | EDUFI links the live HE admissions `Haku ja valinta - korkeakoulu - live.xlsb` Excel report. The viewer redirected through sign-in infrastructure and the anonymous file request returned HTTP 403 here. A public report listing does not establish a stable machine download. | Prefer the documented JSON API for admissions. For surveys, accept a dated, permitted public aggregate export manually, accompanied by its report legend, filters, source link and checksum. Reject unexpected columns and respondent-level files. |
 | Institutional Arvo CSV/API | Authorized Arvo users can export a CSV containing identifiers, small cells and free text. The CSV lacks national comparison data. The API is a paid higher-education add-on requiring an agreement and registered static outbound IP. | Only a future institution-operated importer may read this material. Public analysis uses separately approved aggregate cells and the authorized recipient/purpose. Do not ask staff to send raw exports to the development team. |
@@ -61,7 +99,7 @@ Public survey reports have applied suppression and rounding. One documented rule
 
 | Source | Verified coverage and dimensions | Appropriate use |
 | --- | --- | --- |
-| StatFin 13k9 | Live metadata: 2002–2025, 25 institution selections including total, 185 education selections, gender and type. Annual release. CSV result verified above. | Cross-check comparable UAS qualifications and counts. Changes to education types before 2015 affect long historical comparisons. [Table](https://pxdata.stat.fi/PxWeb/pxweb/en/StatFin/StatFin__opiskt/13k9.px/) |
+| StatFin 13k9 | Live metadata: 2002–2025, 25 institution selections including total, 185 education selections, gender and type. Annual release. The reconciliation reads coded JSON-stat cells. | Cross-check comparable UAS qualifications and counts. Changes to education types before 2015 affect long historical comparisons. [Table](https://pxdata.stat.fi/PxWeb/pxweb/en/StatFin/StatFin__opiskt/13k9.px/) |
 | StatFin 14pm / 14pn | Annual discontinuation. Live 14pm metadata has six school years 2018/19–2023/24, five sector selections, 30 fields, gender and four measures. 14pn spans 2000/01–2023/24 at a broader level. | Show the September denominator and specify leaving a field, sector or all qualification education. Neither a national field rate nor its complement establishes retention at Arcada. [14pm metadata](https://pxdata.stat.fi/PxWeb/api/v1/en/StatFin/kkesk/14pm.px) · [Methodology](https://stat.fi/en/documentation/documentation-of-statistics/kkesk) |
 | StatFin 111l | Live metadata: 2007–2024, 14 education-level selections, 3 sex selections, 21 regions, 13 fields and 26 measures. Annual register-based outcomes one and three years after graduation. | National/field/region benchmark. Institution and named programme are absent from this table. Distinguish employment among all graduates from employment among respondents or residents. [Table metadata](https://pxdata.stat.fi/PxWeb/api/v1/en/StatFin/sijk/111l.px) |
 | Eurostat UOE | Graduate table `educ_uoe_grad01` covers 2012–2024, 1,844,527 possible cells, annual country/ISCED level, sex and age. Enrolment by field is available separately. | International context at national level. Check reporting boundaries, flags, licence exceptions and coverage for each series. ETER offers a separate candidate route for institution-level comparisons after entity and mission matching. [Eurostat graduate table](https://ec.europa.eu/eurostat/databrowser/view/educ_uoe_grad01/default/table?lang=en) · [ETER comparison example](https://tilastoneuvos.vipunen.fi/2023/08/28/opiskelijoita-per-opetus-ja-tutkimushenkilo-ja-professori-kansainvalisessa-vertailussa/) |
