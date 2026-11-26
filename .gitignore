@@ -1,0 +1,11 @@
+.env
+.env.*
+!.env.example
+.vercel/
+.next/
+node_modules/
+__pycache__/
+supabase/.temp/
+supabase/.branches/
+research-local/
+vipunen-avop-dashboard-example.png
