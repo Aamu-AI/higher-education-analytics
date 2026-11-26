@@ -1,0 +1,346 @@
+.viz-panel {
+  --viz-panel: var(--panel, #1c211e);
+  --viz-line: var(--line, #353d35);
+  --viz-text: var(--text, #edf1e8);
+  --viz-muted: var(--muted, #a1ada3);
+  --viz-lime: var(--lime, #c6f18e);
+  --viz-sage: #85a696;
+  min-width: 0;
+  padding: 20px;
+  color: var(--viz-text);
+  background: var(--viz-panel);
+  border: 1px solid var(--viz-line);
+  border-radius: 14px;
+  font-variant-numeric: tabular-nums;
+}
+.viz-panel button {
+  color: inherit;
+  font: inherit;
+  cursor: pointer;
+}
+.viz-panel button:focus-visible {
+  outline: 2px solid var(--viz-lime);
+  outline-offset: 3px;
+}
+.viz-header,
+.viz-heading,
+.viz-break-subheader,
+.viz-target-summary {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+}
+.viz-heading {
+  justify-content: flex-start;
+  gap: 10px;
+}
+.viz-heading > svg {
+  width: 20px;
+  height: 20px;
+  flex: 0 0 auto;
+  color: var(--viz-lime);
+  stroke-width: 1.65;
+}
+.viz-heading h2 {
+  margin: 0;
+  color: inherit;
+  font-size: 1.18rem;
+  font-weight: 620;
+  letter-spacing: -0.035em;
+  line-height: 1.2;
+}
+.viz-view-toggle {
+  width: 32px;
+  height: 32px;
+  display: grid;
+  place-items: center;
+  background: transparent;
+  border: 1px solid var(--viz-line);
+  border-radius: 7px;
+}
+.viz-view-toggle svg {
+  color: var(--viz-muted);
+}
+.viz-view-toggle:hover,
+.viz-switch button:hover {
+  background: #303930;
+}
+.viz-legend,
+.viz-break-subheader {
+  color: var(--viz-muted);
+  font-size: 0.81rem;
+  line-height: 1.4;
+}
+.viz-legend {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 16px;
+  margin: 13px 0 4px;
+}
+.viz-legend span {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+}
+.viz-key {
+  display: inline-block;
+  width: 9px;
+  height: 9px;
+  border-radius: 2px;
+}
+.viz-bachelor {
+  background: var(--viz-sage);
+}
+.viz-master {
+  background: var(--viz-lime);
+}
+.viz-plot {
+  position: relative;
+  height: 225px;
+  margin-top: 8px;
+}
+.viz-grid,
+.viz-columns {
+  position: absolute;
+  inset: 28px 4px 31px 40px;
+}
+.viz-grid {
+  display: flex;
+  justify-content: space-between;
+  flex-direction: column;
+}
+.viz-gridline {
+  position: relative;
+  width: 100%;
+  border-top: 1px dashed var(--viz-line);
+  height: 0;
+}
+.viz-gridline:last-child {
+  border-top-style: solid;
+}
+.viz-gridline span {
+  position: absolute;
+  right: calc(100% + 8px);
+  top: 0;
+  transform: translateY(-50%);
+  color: var(--viz-muted);
+  font-size: 0.75rem;
+  line-height: 1.2;
+}
+.viz-columns {
+  display: flex;
+  justify-content: space-around;
+  gap: 9%;
+  padding: 0 6%;
+  align-items: stretch;
+}
+.viz-column {
+  position: relative;
+  display: flex;
+  justify-content: center;
+  align-items: flex-end;
+  min-width: 0;
+  flex: 1;
+  padding: 0;
+  border: 0;
+  background: transparent;
+}
+.viz-column:hover .viz-bar,
+.viz-column:focus-visible .viz-bar {
+  filter: brightness(1.18);
+}
+.viz-bar {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  width: min(100%, 66px);
+  min-height: 0;
+}
+.viz-segment {
+  flex-basis: 0;
+  min-height: 0;
+}
+.viz-bar > .viz-segment:first-of-type {
+  border-radius: 4px 4px 0 0;
+}
+.viz-value,
+.viz-year {
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%);
+  font-size: 0.82rem;
+  line-height: 1.2;
+  white-space: nowrap;
+}
+.viz-value {
+  bottom: calc(100% + 6px);
+  font-weight: 650;
+}
+.viz-year {
+  top: calc(100% + 9px);
+  color: var(--viz-muted);
+}
+.viz-year::after {
+  content: "";
+  display: block;
+  width: 14px;
+  height: 2px;
+  margin: 4px auto 0;
+  border-radius: 9px;
+  background: transparent;
+}
+.viz-column[aria-pressed="true"] .viz-year {
+  color: var(--viz-lime);
+  font-weight: 650;
+}
+.viz-column[aria-pressed="true"] .viz-year::after {
+  background: var(--viz-lime);
+}
+.viz-break-subheader {
+  margin: 12px 0 11px;
+}
+.viz-switch {
+  display: inline-flex;
+  padding: 2px;
+  border: 1px solid var(--viz-line);
+  border-radius: 7px;
+}
+.viz-switch button {
+  min-height: 26px;
+  padding: 2px 8px;
+  border: 0;
+  border-radius: 4px;
+  background: transparent;
+  font-size: 0.77rem;
+}
+.viz-switch button[aria-pressed="true"] {
+  color: var(--viz-text);
+  background: #384338;
+}
+.viz-field-list {
+  max-height: 298px;
+  overflow-y: auto;
+  list-style: none;
+  padding: 3px;
+  margin: -3px;
+  scrollbar-width: thin;
+  scrollbar-color: #59675c transparent;
+}
+.viz-field {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  gap: 5px 12px;
+  width: 100%;
+  padding: 5px 0 8px;
+  border: 0;
+  border-radius: 2px;
+  background: transparent;
+  text-align: left;
+  line-height: 1.2;
+}
+.viz-field-label {
+  font-size: 0.87rem;
+}
+.viz-field-count {
+  font-size: 0.85rem;
+  font-weight: 650;
+}
+.viz-field-count small {
+  color: var(--viz-muted);
+  font-size: inherit;
+  font-weight: 400;
+}
+button.viz-field:hover .viz-field-label,
+.viz-field-link:hover {
+  color: var(--viz-lime);
+  text-decoration: underline;
+}
+.viz-track {
+  position: relative;
+  grid-column: 1/-1;
+  height: 5px;
+  background: #303930;
+  border-radius: 5px;
+}
+.viz-track i {
+  display: block;
+  height: 100%;
+  border-radius: inherit;
+  background: var(--viz-sage);
+}
+.viz-field-list li:first-child .viz-track i {
+  background: var(--viz-lime);
+}
+.viz-track b {
+  position: absolute;
+  top: -2px;
+  height: 9px;
+  border-left: 2px solid var(--viz-text);
+}
+.viz-target-summary {
+  padding-top: 12px;
+  margin-top: 9px;
+  border-top: 1px solid var(--viz-line);
+  font-size: 0.85rem;
+}
+.viz-target-summary strong {
+  color: var(--viz-lime);
+}
+.viz-table-wrap {
+  overflow: auto;
+  max-height: 300px;
+}
+.viz-table {
+  width: 100%;
+  margin-top: 12px;
+  border-collapse: collapse;
+  font-size: 0.85rem;
+}
+.viz-table caption {
+  text-align: left;
+  color: var(--viz-muted);
+  margin-bottom: 10px;
+}
+.viz-table th,
+.viz-table td {
+  text-align: right;
+  padding: 8px 4px;
+  border-bottom: 1px solid var(--viz-line);
+}
+.viz-table th {
+  font-weight: 550;
+}
+.viz-table th:first-child {
+  text-align: left;
+}
+.viz-table thead th {
+  font-weight: 500;
+  color: var(--viz-muted);
+}
+.viz-year-button,
+.viz-field-link {
+  padding: 0;
+  border: 0;
+  background: transparent;
+  text-align: left;
+}
+.viz-table .viz-year-button[aria-pressed="true"] {
+  color: var(--viz-lime);
+  text-decoration: underline;
+}
+.viz-empty {
+  color: var(--viz-muted);
+  font-size: 0.88rem;
+}
+@media (max-width: 480px) {
+  .viz-panel {
+    padding: 16px;
+  }
+  .viz-plot {
+    height: 210px;
+  }
+  .viz-columns {
+    gap: 8%;
+  }
+}
