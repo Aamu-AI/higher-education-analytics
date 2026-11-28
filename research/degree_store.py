@@ -15,7 +15,7 @@ from build_dashboard import (
 )
 from check_arcada import (
     ARCADA, BACHELOR, COMMISSIONED, LAUREA, NURSING, REPORT, REPORT_MINUS_VIPUNEN,
-    check_arcada, check_sector, statfin, vipunen,
+    check_arcada, check_sector, historical_totals, statfin, vipunen,
 )
 
 LOCK = 384690152091
@@ -55,6 +55,10 @@ def migrate(connection):
 
 def reconciliations(year, rows):
     read, members = statfin(year)
+    if year < 2023:
+        counts = historical_totals(rows, read)
+        return [(code, ALL, "both", "Vipunen", "StatFin 13k9", count, read(code), 0, "matched")
+                for code, count in counts.items()]
     check_arcada(year, rows, read)
     arcada = [r for r in rows if r["koodiKorkeakoulu"] == ARCADA]
     local = sum(r["tutkinnot"] for r in arcada
@@ -163,7 +167,7 @@ def snapshot(connection):
         WHERE r.resource=%s AND r.year=ANY(%s) AND r.release_type='Lopullinen' ORDER BY r.year
     """, (RESOURCE, list(YEARS))).fetchall()
     if [r[1] for r in manifest] != list(YEARS):
-        raise ValueError("Import all three final years before building the dashboard")
+        raise ValueError("Import all requested final years before building the dashboard")
     records = []
     for year, institution, level, field, all_count, included in connection.execute("""
         SELECT year,institution,level,field,sum(all_degrees),sum(included_degrees)
@@ -225,7 +229,7 @@ def main():
     parser = argparse.ArgumentParser(description=__doc__)
     commands = parser.add_subparsers(dest="command", required=True)
     commands.add_parser("migrate")
-    commands.add_parser("import", help="Validate and import all three final UAS years.")
+    commands.add_parser("import", help="Validate and import all requested final UAS years.")
     export = commands.add_parser("export")
     export.add_argument("output", type=Path)
     args = parser.parse_args()

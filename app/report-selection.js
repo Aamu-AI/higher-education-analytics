@@ -4,9 +4,34 @@ export const DEFAULTS = {
   year: "2025",
   comparison: "sector",
   level: "both",
-  funding: "included",
+  funding: "all",
   field: "",
+  schools: "",
+  chartYears: "",
+  order: "awards",
+  trend: "count",
 };
+
+export const AWARD_ORDERS = {
+  awards: "Most awards",
+  growth: "Most additional degrees",
+  bachelorClosest: "Closest to bachelor’s target",
+  masterClosest: "Closest to master’s target",
+  bachelorHighest: "Highest bachelor’s target share",
+  masterHighest: "Highest master’s target share",
+};
+
+export function selectedSchools(selection) {
+  if (selection.schools === "none") return [];
+  if (selection.schools) return selection.schools.split(",");
+  return [...new Set([selection.institution, selection.comparison].filter(id => id !== "sector"))];
+}
+
+export function selectedChartYears(choice, years) {
+  if (!choice) return years;
+  const selected = choice.split(",");
+  return years.filter(year => selected.includes(String(year)));
+}
 
 export const LEVELS = { both: "All levels", bachelor: "Bachelor’s", master: "Master’s" };
 export const FUNDING = { included: "Exclude commissioned", all: "All funding sources" };
@@ -22,13 +47,30 @@ export function readSelection(params, dataset) {
     level: Object.keys(LEVELS),
     funding: Object.keys(FUNDING),
     field: Object.keys(dataset.fields),
+    schools: [],
+    chartYears: [],
+    order: Object.keys(AWARD_ORDERS),
+    trend: ["count", "growth", "rank"],
   };
   const selection = Object.fromEntries(Object.entries(DEFAULTS).map(([key, fallback]) => [
     key, allowed[key].includes(params.get(key)) ? params.get(key) : fallback,
   ]));
+  const checked = (params.get("schools") ?? params.get("peers") ?? "").split(",").filter(id => Object.hasOwn(dataset.institutions, id));
+  if (params.get("schools") === "none") selection.schools = "none";
+  else if (checked.length) {
+    const ids = params.has("schools") ? checked : [...selectedSchools(selection), ...checked];
+    selection.schools = [...new Set(ids)].join(",");
+  }
+  const yearChoice = params.get("chartYears");
+  if (yearChoice === "none") selection.chartYears = "none";
+  else if (yearChoice) {
+    const valid = selectedChartYears(yearChoice, dataset.metadata.years);
+    if (valid.length && valid.length < dataset.metadata.years.length) selection.chartYears = valid.join(",");
+  }
   if (!params.has("view") && ["institution", "year", "level", "funding", "field"].some((key) => params.has(key))) {
     selection.view = "awards";
   }
+  if (selection.view === "completion" && !params.has("funding")) selection.funding = "included";
   if (selection.comparison === selection.institution) selection.comparison = "sector";
   return selection;
 }
@@ -36,7 +78,7 @@ export function readSelection(params, dataset) {
 export function selectionUrl(selection) {
   const params = new URLSearchParams();
   for (const [key, value] of Object.entries(selection)) {
-    if (value !== DEFAULTS[key]) params.set(key, value);
+    if (value !== DEFAULTS[key] || (key === "funding" && selection.view === "completion")) params.set(key, value);
   }
   if (params.size && !params.has("view")) params.set("view", selection.view);
   return params.size ? `/?${params}` : "/";

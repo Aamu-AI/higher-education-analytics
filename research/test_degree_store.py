@@ -212,7 +212,7 @@ class StoreTests(unittest.TestCase):
             self.assertEqual(result["metadata"]["retrievedAt"], "2026-10-03")
             self.assertEqual(result["metadata"]["sourceStamp"], "2026-10-01")
             self.assertEqual(result["metadata"]["sourceStamps"], {
-                "2023": "2026-09-28", "2024": "2026-10-01", "2025": "2026-09-28"})
+                **{str(y): "2026-09-28" for y in store.YEARS}, "2024": "2026-10-01"})
             self.assertEqual(result["nursingStarters"], {"qualification": store.NURSING,
                 "records": [{"year": 2025, "institution": ARCADA, "count": 7}]})
             path_csv = Path(dest) / "degrees.csv"

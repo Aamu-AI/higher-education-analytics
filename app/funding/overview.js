@@ -1,3 +1,4 @@
+import CeilingComparison from "./ceilings";
 import { agreements, nursingReview } from "../../data/institutions-config";
 import { awardCount, comparisonAwards, comparisonName, formatCount } from "../report-selection";
 import { completion, completionResults, onTimeShare, scope, sourceUrl, total } from "./results";
@@ -7,7 +8,7 @@ const percent = new Intl.NumberFormat("en-GB", { style: "percent", maximumFracti
 const modelUrl = "https://okm.fi/ohjaus-rahoitus-ja-sopimukset";
 const decreeUrl = "https://www.finlex.fi/fi/lainsaadanto/saadoskokoelma/2024/171";
 const budgetUrl = "https://budjetti.vm.fi/sisalto.jsp?lang=fi&maindoc=%2F2026%2Faky%2Faky.xml&opennode=0%3A1%3A11%3A269%3A719%3A793%3A803%3A&year=0";
-const weights = [
+const currentWeights = [
   ["Education", 75, [
     ["Bachelor’s degrees", 56], ["Continuous learning credits", 5],
     ["First-time entrants", 3], ["Graduation feedback (AVOP)", 3],
@@ -18,6 +19,30 @@ const weights = [
     ["External R&D funding", 12], ["Master’s degrees", 6], ["Publications and other outputs", 2],
   ]],
   ["Strategy", 5, []],
+];
+
+const earlierWeights = [
+  ["Education", 76, [
+    ["Bachelor’s degrees", 56], ["Continuous learning credits", 8], ["Inter-institutional credits", 1],
+    ["Graduation feedback (AVOP)", 3], ["Career follow-up", 3], ["Graduate employment in Finland", 3],
+    ["Vocational teacher education", 2],
+  ]],
+  ["Research, development and innovation", 19, [
+    ["External R&D funding", 11], ["Master’s degrees", 6], ["Publications and other outputs", 2],
+  ]],
+  ["Strategy", 5, []],
+];
+const legacyWeights = [
+  ["Education", 79, [
+    ["Bachelor’s degrees", 40], ["Students completing 55 credits", 23], ["Graduate employment", 4],
+    ["Open UAS and other eligible studies", 5], ["Graduation feedback (AVOP)", 3],
+    ["International student and placement mobility", 2], ["Vocational teacher education", 2],
+  ]],
+  ["Research, development and innovation", 15, [
+    ["External R&D funding", 8], ["Master’s degrees", 4], ["Publications and other outputs", 2],
+    ["International staff mobility", 1],
+  ]],
+  ["Other policy objectives", 6, [["Strategy", 5], ["Field-specific funding", 1]]],
 ];
 
 function NursingReview({ dataset, selection, result }) {
@@ -37,7 +62,12 @@ function NursingReview({ dataset, selection, result }) {
   );
 }
 
-export default function FundingOverview({ dataset, selection, completionLink }) {
+export default function FundingOverview({ dataset, selection, onField, completionLink }) {
+  const weights = selection.year >= 2025 ? currentWeights : selection.year >= 2021 ? earlierWeights : legacyWeights;
+  const modelPeriod = selection.year >= 2025 ? "2025–2028" : selection.year >= 2021 ? "2021–2024" : "2017–2020";
+  const modelSource = selection.year >= 2025 ? decreeUrl : selection.year >= 2021
+    ? "https://okm.fi/documents/1410845/4392480/AMK_rahoitusmalli_fi/65aedf23-83a0-64f7-aed5-ebdf07bc9efe/AMK_rahoitusmalli_fi.pdf"
+    : "https://okm.fi/documents/1410845/4177242/181024_OKM_rahoitusraportti_web.pdf/44cd4514-8627-1ba7-029f-4ab712f40763/181024_OKM_rahoitusraportti_web.pdf.pdf";
   const agreement = agreements[selection.institution]?.[selection.year];
   const healthTarget = agreement?.groups.find((group) => group.fields.includes(scope.field))?.target;
   const health = { ...selection, ...scope };
@@ -52,10 +82,47 @@ export default function FundingOverview({ dataset, selection, completionLink }) 
   const masterComparison = comparisonAwards(dataset, masters);
   const { allocation } = agreement ?? {};
   const stateAward = allocation && Object.values(allocation).reduce((sum, value) => sum + value, 0);
+  function componentFigure(label) {
+    if (label === "Bachelor’s degrees") return formatCount(awardCount(dataset, { ...selection, level: "bachelor", field: "", funding: "included" })) + " annual awards";
+    if (label === "Master’s degrees") return formatCount(masterCount) + " annual awards";
+    if (label === "Strategy" && allocation) return euros(allocation.strategy) + " at signing";
+    if (label === "Graduation feedback (AVOP)") return "Question scores, valid answer counts and verified funding points unavailable";
+    return "School figure unavailable in this release";
+  }
   const sourceStamp = dataset.metadata.sourceStamps?.[selection.year] ?? dataset.metadata.sourceStamp;
   return (
     <div className="funding-content">
-      <section className="panel funding-section" aria-labelledby="case-heading">
+      <CeilingComparison dataset={dataset} selection={selection} onField={onField} />
+      <section className="panel funding-section" aria-labelledby="model-heading">
+        <h2 id="model-heading">National base funding model · {modelPeriod}</h2>
+        <p>Weights are shares of national base funding. The school column identifies the published measure for the selected year.</p>
+        <div className="funding-weights">
+          {weights.map(([label, weight]) => <div key={label}><strong>{weight}%</strong><span>{label}</span></div>)}
+        </div>
+        <div className="table-scroll">
+          <table className="funding-table">
+            <caption>Weights as shares of the whole model</caption>
+            <thead><tr><th scope="col">Component</th><th scope="col">National weight</th><th scope="col">School figure · {selection.year}</th></tr></thead>
+            <tbody>{weights.flatMap(([category, weight, items]) => items.length ? items : [[category, weight]])
+              .map(([label, weight]) => <tr key={label}><th scope="row">{label}</th><td>{weight}%</td><td>{componentFigure(label)}</td></tr>)}</tbody>
+          </table>
+        </div>
+        <p className="funding-sources"><a href={modelUrl}>Ministry guidance</a> · <a href={modelSource}>Model weights for {modelPeriod}</a></p>
+      </section>
+
+      <section className="panel funding-section" aria-labelledby="masters-heading">
+        <h2 id="masters-heading">Master’s degrees</h2>
+        <div className="funding-overview-metrics">
+          <div className="funding-result"><strong>{formatCount(masterCount)}{agreement?.masterTarget ? <small> of {agreement.masterTarget}</small> : null}</strong>
+            <span>{agreement?.masterTarget ? `Awards against the ${agreement.period} annual average target` : "Awards"}</span></div>
+          <div className="funding-result"><strong>{formatCount(masterComparison.value)}</strong><span>{comparison}</span>
+            {selection.comparison === "sector" && <span className="unit">{masterComparison.codes.length} institutions with published counts</span>}</div>
+        </div>
+        <p>Final {selection.year} awards across all funding sources under the {selection.year >= 2021 ? 6 : 4}% national model component.</p>
+        <p className="funding-sources">Source update {sourceStamp} · <a href={dataset.metadata.sourceUrl}>Vipunen awards</a>{agreement?.masterTarget && <> · <a href={agreement.agreementUrl}>Ministry agreement, p. 4</a></>}</p>
+      </section>
+
+      <details className="panel funding-section"><summary>Health and welfare completion-time case</summary>
         <h2 id="case-heading">Health and welfare bachelor’s degrees</h2>
         <p>Final {selection.year} awards excluding commissioned education.</p>
         <div className="funding-overview-metrics">
@@ -73,37 +140,7 @@ export default function FundingOverview({ dataset, selection, completionLink }) 
         {healthTarget && <p>The {agreement.period} agreement target is an annual average. Its field group also includes humanities and medicine. <a href={agreement.agreementUrl}>Ministry agreement</a> · <a href={agreement.source}>Arcada annual report, Table 2</a></p>}
         <p className="funding-sources">Awards update {sourceStamp} · <a href={dataset.metadata.sourceUrl}>Vipunen awards</a>{ownShare != null && <> · Timing update {completion.sourceStamp} · <a href={sourceUrl}>Vipunen completion data</a></>}</p>
         {selection.institution === nursingReview.institution && <NursingReview dataset={dataset} selection={selection} result={result} />}
-      </section>
-
-      <section className="panel funding-section" aria-labelledby="masters-heading">
-        <h2 id="masters-heading">Master’s degrees</h2>
-        <div className="funding-overview-metrics">
-          <div className="funding-result"><strong>{formatCount(masterCount)}{agreement?.masterTarget ? <small> of {agreement.masterTarget}</small> : null}</strong>
-            <span>{agreement?.masterTarget ? `Awards against the ${agreement.period} annual average target` : "Awards"}</span></div>
-          <div className="funding-result"><strong>{formatCount(masterComparison.value)}</strong><span>{comparison}</span>
-            {selection.comparison === "sector" && <span className="unit">{masterComparison.codes.length} institutions with published counts</span>}</div>
-        </div>
-        <p>Final {selection.year} awards across all funding sources under the 6% national model component.</p>
-        <p className="funding-sources">Source update {sourceStamp} · <a href={dataset.metadata.sourceUrl}>Vipunen awards</a>{agreement?.masterTarget && <> · <a href={agreement.agreementUrl}>Ministry agreement, p. 4</a></>}</p>
-      </section>
-
-      <section className="panel funding-section" aria-labelledby="model-heading">
-        <h2 id="model-heading">National base funding model</h2>
-        <p>Under the model in force since 2025, the ministry distributes each indicator’s funding by institutions’ shares of the same sector measure. Strategy funding is agreed separately.</p>
-        <div className="funding-weights">
-          {weights.map(([label, weight]) => <div key={label}><strong>{weight}%</strong><span>{label}</span></div>)}
-        </div>
-        <details className="funding-details">
-          <summary>See the national component weights</summary>
-          <table className="funding-table">
-            <caption>Weights as shares of the whole model</caption>
-            <thead><tr><th scope="col">Component</th><th scope="col">Weight</th></tr></thead>
-            <tbody>{weights.flatMap(([category, weight, items]) => items.length ? items : [[category, weight]])
-              .map(([label, weight]) => <tr key={label}><th scope="row">{label}</th><td>{weight}%</td></tr>)}</tbody>
-          </table>
-        </details>
-        <p className="funding-sources"><a href={modelUrl}>Ministry guidance</a> · <a href={decreeUrl}>Decree 171/2024</a></p>
-      </section>
+      </details>
 
       <section className="panel funding-section" aria-labelledby="allocation-heading">
         <h2 id="allocation-heading">Published allocations</h2>

@@ -15,26 +15,27 @@ from check_arcada import (
 from probe import BASE
 
 RESOURCE = "opiskelijat_ja_tutkinnot"
-YEARS = (2023, 2024, 2025)
+YEARS = tuple(range(2020, 2026))
 OUTPUT = Path(__file__).resolve().parents[1] / "data" / "degrees.json"
 SOURCE_KEY = (
     "koodiKorkeakoulu", "koodiKoulutus", "sukupuoli", "rahoituslahde",
     "kirjoillaoloTammi", "kirjoillaoloSyys", "koulutuksenMaakunta",
 )
 LEVELS = {BACHELOR: "bachelor", MASTER: "master"}
+# VIRTA okmohjausala, codes 1 through 12 in source order.
 FIELD_NAMES = {
-    "Humanistiset alat": "Humanities",
     "Kasvatusalat": "Education",
+    "Taiteet ja kulttuurialat": "Arts and culture",
+    "Humanistiset alat": "Humanities",
+    "Yhteiskunnalliset alat": "Social sciences",
     "Kauppa, hallinto ja oikeustieteet": "Business, administration and law",
     "Luonnontieteet": "Natural sciences",
-    "Lääketieteet": "Medicine",
-    "Maa- ja metsätalousalat": "Agriculture and forestry",
-    "Palvelualat": "Services",
-    "Taiteet ja kulttuurialat": "Arts and culture",
-    "Tekniikan alat": "Technology",
-    "Terveys- ja hyvinvointialat": "Health and welfare",
     "Tietojenkäsittely ja tietoliikenne": "Information and communication technology",
-    "Yhteiskunnalliset alat": "Social sciences",
+    "Tekniikan alat": "Technology",
+    "Maa- ja metsätalousalat": "Agriculture and forestry",
+    "Lääketieteet": "Medicine",
+    "Terveys- ja hyvinvointialat": "Health and welfare",
+    "Palvelualat": "Services",
 }
 
 
@@ -55,10 +56,12 @@ def summarize(year, rows, release_type="Lopullinen"):
         funding = row["rahoituslahde"]
         if field not in FIELD_NAMES or funding not in AWARDS_FUNDING:
             raise ValueError(f"Unmapped classification: {field!r}, {funding!r}")
-        cell = (row["koodiKorkeakoulu"], LEVELS[row["koulutusasteTaso2"]], field)
         awards = row["tutkinnot"]
         if type(awards) is not int or awards < 0:
-            raise ValueError(f"Invalid degree count for {year} {cell}: {awards!r}")
+            raise ValueError(f"Invalid degree count for {year} {row['koodiKorkeakoulu']}: {awards!r}")
+        if row["koulutusasteTaso2"] == "Ammatillinen korkea-aste" and awards == 0:
+            continue
+        cell = (row["koodiKorkeakoulu"], LEVELS[row["koulutusasteTaso2"]], field)
         all_funding[cell] += awards
         if funding != COMMISSIONED:
             included[cell] += awards
