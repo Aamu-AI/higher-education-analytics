@@ -921,3 +921,44 @@ footer button:hover {
     transition: none !important;
   }
 }
+
+.compare-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 16px; align-items: start; }
+.awards-compare { margin: 16px 0; }
+.compare-grid > *, .funding-section { min-width: 0; }
+.funding-section .table-scroll { max-width: 100%; overflow-x: auto; }
+.funding-section table { width: 100%; font-variant-numeric: tabular-nums; }
+.funding-section caption { text-align: left; padding: 12px 0; color: var(--muted); font-size: .82rem; }
+.funding-section th, .funding-section td { white-space: normal; }
+.funding-section th:first-child, .funding-section th[scope="row"] { text-align: left; }
+.funding-section .cell-note { display: block; font-weight: 400; color: var(--muted); line-height: 1.45; margin-top: .25rem; }
+.section-tools { display:flex; flex-wrap:wrap; justify-content:space-between; align-items:center; gap:12px; }
+.gap-note { border-left: 3px solid var(--lime); padding: .8rem 1rem; background: var(--bg); margin: 1rem 0; }
+.gap-note small { display:block; color:var(--muted); margin-top:.35rem; }
+.share-track { display:block; position:relative; background: var(--line); height:6px; margin:.5rem 0; min-width:60px; }
+.share-track span { display:block; background:var(--lime); height:100%; }
+.share-track i { position:absolute; top:-3px; height:12px; border-left:2px solid var(--text); }
+.school-trend { width:100%; height:auto; display:block; margin:14px 0; }
+.school-trend text { fill:var(--muted); font:12px system-ui,sans-serif; }
+.trend-grid { stroke:var(--line); }
+.trend-legend { display:flex; gap:8px 16px; flex-wrap:wrap; margin-top:1rem; font-size:.85rem; }
+.trend-legend span { display:inline-flex; align-items:center; gap:6px; }
+.trend-legend i { width:.75rem; height:3px; }
+.text-btn:disabled { cursor:default; color:inherit; opacity:1; }
+.funding-section summary { cursor:pointer; font-weight:600; }
+@media (max-width:1100px) { .compare-grid {grid-template-columns:minmax(0,1fr);} }
+
+.funding-section .chosen th, .funding-section .chosen td {background:#2c3828;}
+.funding-section .text-btn[aria-pressed="true"] {font-weight:700;color:var(--lime);}
+
+.funding-section .align-left { text-align:left; }
+.selected-awards strong {color:var(--text);}
+@media (max-width:680px) {
+  .ceiling-summary thead {position:absolute; width:1px; height:1px; overflow:hidden; clip-path:inset(50%);}
+  .ceiling-summary tbody, .ceiling-summary th, .ceiling-summary td {display:block;}
+  .ceiling-summary tr {display:grid; grid-template-columns:repeat(4,minmax(0,1fr)); padding:10px 0; border-top:1px solid var(--line);}
+  .ceiling-summary th[scope="row"] {grid-column:1/-1; padding:0 0 8px; font-size:.95rem;}
+  .ceiling-summary th, .ceiling-summary td {border:0; text-align:left; padding:4px 2px; overflow-wrap:anywhere;}
+  .ceiling-summary td::before {content:attr(data-label); display:block; color:var(--muted); font-size:.72rem; margin-bottom:3px;}
+  .ceiling-summary .share-track {min-width:0;}
+  .ceiling-summary caption {white-space:normal;}
+}

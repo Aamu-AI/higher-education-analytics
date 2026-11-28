@@ -9,6 +9,8 @@ test("funding definitions, shared URLs and CSV agree on Arcada’s 2025 figures"
     name: "Degrees awarded",
     exact: true,
   });
+  await expect(total).toContainText("573");
+  await page.getByLabel("Funding definition").selectOption("included");
   await expect(total).toContainText("561");
   await expect(
     page.getByRole("region", { name: "Bachelor’s target attainment" }),
@@ -30,7 +32,7 @@ test("funding definitions, shared URLs and CSV agree on Arcada’s 2025 figures"
   await page.getByLabel("Reporting year").selectOption("2024");
   await expect(total).toContainText("478");
   await page.getByRole("button", { name: "Reset filters" }).click();
-  await expect(total).toContainText("561");
+  await expect(total).toContainText("573");
 });
 
 test("mobile filters and the equivalent trend table work with the keyboard", async ({

@@ -4,6 +4,7 @@ import { expect, test } from "@playwright/test";
 test("Funding leads to the reconciled completion and qualification comparisons", async ({ page }) => {
   await page.goto("/");
   await expect(page.getByRole("heading", { level: 1 })).toHaveText("Funding");
+  await page.getByText("Health and welfare completion-time case", { exact: true }).click();
   await expect(page.getByText("205 of 300", { exact: true })).toBeVisible();
   await expect(page.getByText("84 of 110", { exact: true })).toBeVisible();
   await expect(page.getByText("2023 (72) · 2024 (177) · 2025 (304)", { exact: false })).toBeVisible();
@@ -36,6 +37,7 @@ test("Funding leads to the reconciled completion and qualification comparisons",
 test("shared comparison follows the user and unsupported timing retains its filters", async ({ page }) => {
   await page.goto("/");
   await page.getByLabel("Compare with").selectOption("02629");
+  await page.getByText("Health and welfare completion-time case", { exact: true }).click();
   await page.getByRole("link", { name: "View completion times" }).click();
   await expect(page).toHaveURL(/view=completion.*comparison=02629/);
   await expect(page.getByRole("columnheader", { name: "Laurea University of Applied Sciences" }).first()).toBeVisible();
@@ -72,7 +74,9 @@ test("Funding and Completion time work from the keyboard at narrow width", async
   await page.keyboard.press("Enter");
   await expect(page.getByRole("main")).toBeFocused();
   await page.keyboard.press("Tab");
-  await expect(page.getByRole("link", { name: "View completion times" })).toBeFocused();
+  await expect(page.getByRole("button", { name: "Export comparison CSV" })).toBeFocused();
+  await page.getByText("Health and welfare completion-time case", {exact:true}).press("Enter");
+  await page.getByRole("link", { name: "View completion times" }).focus();
   await page.keyboard.press("Enter");
   await expect(page.getByRole("heading", { name: "Completion time", exact: true })).toBeVisible();
   await expect(page.getByRole("button", { name: "Open filters" })).toBeInViewport();

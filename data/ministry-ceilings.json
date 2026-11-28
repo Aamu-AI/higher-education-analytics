@@ -1,0 +1,384 @@
+{
+  "2021–2024": {
+    "02536": {
+      "source": "https://okm.fi/documents/1410845/3992270/Centria+ammattikorkeakoulu+sopimus+2021-2024.pdf/60375d9d-cd22-0d61-8c3c-f29a2555e585?version=1.1&t=1611924192928",
+      "ceilings": {
+        "arts": 20,
+        "health": 200,
+        "business": 175,
+        "technology": 180
+      }
+    },
+    "02623": {
+      "source": "https://okm.fi/documents/1410845/3992275/DIAK+ammattikorkeakoulu+sopimus+2021-2024.pdf/42630e80-14a3-f4f5-c499-5cfe32b633c4?version=1.1&t=1611922883290",
+      "ceilings": {
+        "health": 705
+      }
+    },
+    "10056": {
+      "source": "https://okm.fi/documents/1410845/3992279/Haaga-Helia+ammattikorkeakoulu+sopimus+2021-2024.pdf/0674b79c-1630-7c33-3b96-9bb4d1d260a4?version=1.1&t=1611923566681",
+      "ceilings": {
+        "arts": 40,
+        "business": 1500,
+        "technology": 270
+      }
+    },
+    "02631": {
+      "source": "https://okm.fi/documents/1410845/3992283/Humanistinen+ammattikorkeakoulu+sopimus+2021-2024.pdf/9f153a3d-3e50-0f72-0cde-2fb0286882d5?version=1.1&t=1611924246887",
+      "ceilings": {
+        "arts": 80,
+        "health": 270
+      }
+    },
+    "02467": {
+      "source": "https://okm.fi/documents/1410845/3992287/H%C3%A4meen+ammattikorkeakoulu+sopimus+2021-2024.pdf/91b86946-588c-c348-04a9-0fdfd8ce05b6?version=1.1&t=1611924311642",
+      "ceilings": {
+        "arts": 70,
+        "health": 325,
+        "business": 255,
+        "technology": 730
+      }
+    },
+    "02504": {
+      "source": "https://okm.fi/documents/1410845/3992291/Jyv%C3%A4skyl%C3%A4n+ammattikorkeakoulu+sopimus+2021-2024.pdf/9b0c3cce-ce06-3f20-d048-923b668e3430?version=1.1&t=1611924483924",
+      "ceilings": {
+        "arts": 43,
+        "health": 440,
+        "business": 370,
+        "technology": 430
+      }
+    },
+    "10118": {
+      "source": "https://okm.fi/documents/1410845/3992295/Kaakkois-Suomen+ammattikorkeakoulu+sopimus+2021-2024.pdf/63ce9fd4-f732-a000-88f6-06d9d038a28d?version=1.1&t=1611924721763",
+      "ceilings": {
+        "arts": 104,
+        "health": 644,
+        "business": 418,
+        "technology": 452
+      }
+    },
+    "02473": {
+      "source": "https://okm.fi/documents/1410845/3992299/Kajaanin+ammattikorkeakoulu+sopimus+2021-2024.pdf/44ec287d-0a4f-c559-74f5-6ee59f38d7ee?version=1.1&t=1611924562200",
+      "ceilings": {
+        "health": 110,
+        "business": 170,
+        "technology": 123
+      }
+    },
+    "02469": {
+      "source": "https://okm.fi/documents/1410845/3992603/Karelia-ammattikorkeakoulu+sopimus+2021-2024.pdf/45d54a20-9dd4-1cea-298e-f29c959fa740?version=1.1&t=1611924803332",
+      "ceilings": {
+        "arts": 45,
+        "health": 320,
+        "business": 150,
+        "technology": 210
+      }
+    },
+    "10126": {
+      "source": "https://okm.fi/documents/1410845/3992607/LAB-ammattikorkeakoulu+sopimus+2021-2024.pdf/9d312e9b-ce4d-0ece-f5f9-f0aaf237ddc9?version=1.1&t=1611925058232",
+      "ceilings": {
+        "arts": 240,
+        "health": 610,
+        "business": 470,
+        "technology": 430
+      }
+    },
+    "10108": {
+      "source": "https://okm.fi/documents/1410845/3992611/Lapin+ammattikorkeakoulu+sopimus+2021-2024.pdf/c0d78615-2251-d8cf-7eba-8ec6f9254702?version=1.1&t=1611925850641",
+      "ceilings": {
+        "arts": 18,
+        "health": 450,
+        "business": 300,
+        "technology": 330
+      }
+    },
+    "02629": {
+      "source": "https://okm.fi/documents/1410845/3992615/Laurea-ammattikorkeakoulu+sopimus+2021-2024.pdf/f4c03a41-445b-1e07-a441-7508a50178be?version=1.2&t=1611925551909",
+      "ceilings": {
+        "health": 900,
+        "business": 740,
+        "technology": 150
+      }
+    },
+    "10065": {
+      "source": "https://okm.fi/documents/1410845/3992619/Metropolia+ammattikorkeakoulu+sopimus+2021-2024.pdf/56f3ad17-4113-c01f-c05a-64a463a0df03?version=1.2&t=1611925998747",
+      "ceilings": {
+        "arts": 340,
+        "health": 1200,
+        "business": 300,
+        "technology": 1350
+      }
+    },
+    "02471": {
+      "source": "https://okm.fi/documents/1410845/3992627/Oulun+Ammattikorkeakoulu+sopimus+2021-2024.pdf/15e13a74-e110-a51c-f44b-f8eb7f4eee69?version=1.2&t=1611927206956",
+      "ceilings": {
+        "arts": 90,
+        "health": 520,
+        "business": 250,
+        "technology": 620
+      }
+    },
+    "02507": {
+      "source": "https://okm.fi/documents/1410845/3992635/Satakunnan+ammattikorkeakoulu+sopimus+2021-2024.pdf/9e57b806-d3e5-0279-2339-d71ac5751aae?version=1.1&t=1611926616876",
+      "ceilings": {
+        "arts": 20,
+        "health": 370,
+        "business": 340,
+        "technology": 330
+      }
+    },
+    "02537": {
+      "source": "https://okm.fi/documents/1410845/3992639/Savonia-ammattikorkeakoulu+sopimus+2021-2024.pdf/fb4c77cc-3980-c91d-89c5-8fefdbeb3596?version=1.2&t=1738563906014",
+      "ceilings": {
+        "arts": 120,
+        "health": 620,
+        "business": 270,
+        "technology": 450
+      }
+    },
+    "02472": {
+      "source": "https://okm.fi/documents/1410845/3992643/Sein%C3%A4joen+ammattikorkeakoulu+sopimus+2021-2024.pdf/e5589350-1913-1fa4-379d-f3fd1c662a41?version=1.1&t=1611925663277",
+      "ceilings": {
+        "arts": 60,
+        "health": 270,
+        "business": 215,
+        "technology": 270
+      }
+    },
+    "02630": {
+      "source": "https://okm.fi/documents/1410845/3992647/Tampereen+ammattikorkeakoulu+sopimus+2021-2024.pdf/426ed683-d2c7-4715-5871-f517a7cf57b1?version=1.1&t=1611927024855",
+      "ceilings": {
+        "arts": 120,
+        "health": 720,
+        "business": 430,
+        "technology": 800
+      }
+    },
+    "02509": {
+      "source": "https://okm.fi/documents/1410845/3992651/Turun+ammattikorkeakoulu+sopimus+2021-2024.pdf/187a235a-5b7a-79a3-693d-0fd6476ec8e2?version=1.1&t=1611926827309",
+      "ceilings": {
+        "arts": 170,
+        "health": 900,
+        "business": 390,
+        "technology": 750
+      }
+    },
+    "02627": {
+      "source": "https://okm.fi/documents/1410845/3992655/Vaasan+ammattikorkeakoulu+sopimus+2021-2024.pdf/bfe7da25-82b3-13ee-5e07-d6c58a0ab5fb?version=1.1&t=1611926756454",
+      "ceilings": {
+        "health": 170,
+        "business": 160,
+        "technology": 260
+      }
+    },
+    "02535": {
+      "source": "https://okm.fi/documents/1410845/3991460/Yrkesh%C3%B6gskolan+Arcada+avtal+2021-2024.pdf/3c0b8923-9e52-10e0-9581-59dd6692436d?version=1.1&t=1611922573242",
+      "ceilings": {
+        "arts": 40,
+        "health": 220,
+        "business": 140,
+        "technology": 100
+      }
+    },
+    "10066": {
+      "source": "https://okm.fi/documents/1410845/3992623/Yrkeh%C3%B6gskolan+Novia+avtal+2021-2024.pdf/b1e7e11c-b9ce-0fa1-9405-8df0105e907d?version=1.2&t=1611927287197",
+      "ceilings": {
+        "arts": 62,
+        "health": 300,
+        "business": 155,
+        "technology": 260
+      }
+    }
+  },
+  "2025–2028": {
+    "02536": {
+      "source": "https://okm.fi/documents/1410845/3992270/Centria%2Bammattikorkeakoulu%2Bsopimus%2B2025-2028.pdf/758b3b89-bbcd-a089-84e5-e1789e7433ac?t=1738563568885&version=1.2",
+      "ceilings": {
+        "arts": 25,
+        "health": 230,
+        "business": 250,
+        "technology": 250
+      }
+    },
+    "02623": {
+      "source": "https://okm.fi/documents/1410845/3992275/DIAK%2Bammattikorkeakoulu%2Bsopimus%2B2025-2028.pdf/01978145-d829-c5fe-f07b-f3a958a9c598?t=1738563541476&version=1.3",
+      "ceilings": {
+        "health": 800
+      }
+    },
+    "10056": {
+      "source": "https://okm.fi/documents/1410845/3992279/Haaga-Helia%2Bammattikorkeakoulu%2Bsopimus%2B2025-2028.pdf/b7187c2e-909f-8a07-9b2a-4bb383e8bf4f?t=1738563585674&version=1.1",
+      "ceilings": {
+        "arts": 45,
+        "business": 1750,
+        "technology": 400
+      }
+    },
+    "02631": {
+      "source": "https://okm.fi/documents/1410845/3992283/Humanistinen%2Bammattikorkeakoulu%2Bsopimus%2B2025-2028.pdf/d24284f2-21ac-b759-8300-0e12a556a8bb?t=1738563602201&version=1.1",
+      "ceilings": {
+        "arts": 120,
+        "health": 350
+      }
+    },
+    "02467": {
+      "source": "https://okm.fi/documents/1410845/3992287/H%C3%A4meen%2Bammattikorkeakoulu%2Bsopimus%2B2025-2028.pdf/b7769994-8f6c-9291-52db-88ac926e45ef?t=1738563649202&version=1.1",
+      "ceilings": {
+        "arts": 70,
+        "health": 400,
+        "business": 350,
+        "technology": 850
+      }
+    },
+    "02504": {
+      "source": "https://okm.fi/documents/1410845/3992291/Jyv%C3%A4skyl%C3%A4n%2Bammattikorkeakoulu%2Bsopimus%2B2025-2028.pdf/bdf05ca5-a5b9-4c28-d58c-5a91aa20ea22?t=1738563665548&version=1.1",
+      "ceilings": {
+        "arts": 40,
+        "health": 490,
+        "business": 400,
+        "technology": 500
+      }
+    },
+    "10118": {
+      "source": "https://okm.fi/documents/1410845/3992295/Kaakkois-Suomen%2Bammattikorkeakoulu%2Bsopimus%2B2025-2028.pdf/cdafff81-0803-0c74-d9bf-0e386cb9c0ae?t=1738563696926&version=1.1",
+      "ceilings": {
+        "arts": 110,
+        "health": 780,
+        "business": 530,
+        "technology": 550
+      }
+    },
+    "02473": {
+      "source": "https://okm.fi/documents/1410845/3992299/Kajaanin%2Bammattikorkeakoulu%2Bsopimus%2B2025-2028.pdf/3ff50212-ca49-16aa-58a9-3c53f24a1d9c?t=1738563682286&version=1.1",
+      "ceilings": {
+        "health": 150,
+        "business": 200,
+        "technology": 140
+      }
+    },
+    "02469": {
+      "source": "https://okm.fi/documents/1410845/3992603/Karelia-ammattikorkeakoulu%2Bsopimus%2B2025-2028.pdf/b65f3591-e4d9-80db-957f-34ced88dc3d2?t=1738563711888&version=1.1",
+      "ceilings": {
+        "arts": 45,
+        "health": 400,
+        "business": 180,
+        "technology": 270
+      }
+    },
+    "10126": {
+      "source": "https://okm.fi/documents/1410845/3992607/LAB-ammattikorkeakoulu%2Bsopimus%2B2025-2028.pdf/2b545a72-5263-3a71-14a3-0ee9eb0fb278?t=1738563735162&version=1.1",
+      "ceilings": {
+        "arts": 250,
+        "health": 720,
+        "business": 540,
+        "technology": 520
+      }
+    },
+    "10108": {
+      "source": "https://okm.fi/documents/1410845/3992611/Lapin%2Bammattikorkeakoulu%2Bsopimus%2B2025-2028.pdf/df5cdc2d-322d-b320-5b80-be337e58eb07?t=1738563806145&version=1.1",
+      "ceilings": {
+        "arts": 25,
+        "health": 480,
+        "business": 320,
+        "technology": 400
+      }
+    },
+    "02629": {
+      "source": "https://okm.fi/documents/1410845/3992615/Laurea-ammattikorkeakoulu%2Bsopimus%2B2025-2028.pdf/471528b2-63a7-a4b2-0169-919a32cde66e?t=1738563762180&version=1.1",
+      "ceilings": {
+        "health": 1080,
+        "business": 890,
+        "technology": 220
+      }
+    },
+    "10065": {
+      "source": "https://okm.fi/documents/1410845/3992619/Metropolia%2Bammattikorkeakoulu%2Bsopimus%2B2025-2028.pdf/6b1ac407-012b-9200-c306-36fc80f484a4?t=1738563820929&version=1.1",
+      "ceilings": {
+        "arts": 350,
+        "health": 1500,
+        "business": 350,
+        "technology": 1450
+      }
+    },
+    "02471": {
+      "source": "https://okm.fi/documents/1410845/3992627/Oulun%2BAmmattikorkeakoulu%2Bsopimus%2B2025-2028.pdf/8daa33b8-68b7-afa5-5569-02110e758750?t=1738563938292&version=1.1",
+      "ceilings": {
+        "arts": 80,
+        "health": 570,
+        "business": 300,
+        "technology": 670
+      }
+    },
+    "02507": {
+      "source": "https://okm.fi/documents/1410845/3992635/Satakunnan%2Bammattikorkeakoulu%2Bsopimus%2B2025-2028.pdf/257fda77-482d-ec94-5e60-258f86d00e76?t=1738563834493&version=1.1",
+      "ceilings": {
+        "arts": 25,
+        "health": 450,
+        "business": 450,
+        "technology": 450
+      }
+    },
+    "02537": {
+      "source": "https://okm.fi/documents/1410845/3992639/Savonia-ammattikorkeakoulu%2Bsopimus%2B2025-2028.pdf/9f677256-d4b0-ea39-7b7a-969a1462e81f?t=1738563914782&version=1.2",
+      "ceilings": {
+        "arts": 120,
+        "health": 620,
+        "business": 320,
+        "technology": 500
+      }
+    },
+    "02472": {
+      "source": "https://okm.fi/documents/1410845/3992643/Sein%C3%A4joen%2Bammattikorkeakoulu%2Bsopimus%2B2025-2028.pdf/13e36a1f-0cc0-6863-ca26-e367f0df428f?t=1738563791614&version=1.1",
+      "ceilings": {
+        "arts": 60,
+        "health": 320,
+        "business": 250,
+        "technology": 300
+      }
+    },
+    "02630": {
+      "source": "https://okm.fi/documents/1410845/3992647/Tampereen%2Bammattikorkeakoulu%2Bsopimus%2B2025-2028.pdf/07dee71b-3be9-21e3-6e69-0de8c1d5d230?t=1738563875577&version=1.1",
+      "ceilings": {
+        "arts": 130,
+        "health": 860,
+        "business": 480,
+        "technology": 920
+      }
+    },
+    "02509": {
+      "source": "https://okm.fi/documents/1410845/3992651/Turun%2Bammattikorkeakoulu%2Bsopimus%2B2025-2028.pdf/b85cac6f-ed6b-ced5-86ad-904be3274743?t=1738563860625&version=1.1",
+      "ceilings": {
+        "arts": 170,
+        "health": 900,
+        "business": 475,
+        "technology": 830
+      }
+    },
+    "02627": {
+      "source": "https://okm.fi/documents/1410845/3992655/Vaasan%2Bammattikorkeakoulu%2Bsopimus%2B2025-2028.pdf/27d43db4-b03d-7f7e-20ae-8282ff9829ad?t=1738563848283&version=1.1",
+      "ceilings": {
+        "health": 250,
+        "business": 190,
+        "technology": 280
+      }
+    },
+    "02535": {
+      "source": "https://okm.fi/documents/1410845/3991460/Yrkesh%C3%B6gskolan%2BArcada%2Bavtal%2B2025-2028.pdf/d8e3f5a8-d62c-9e9a-b2b3-591a98dab230?t=1738563519564&version=1.2",
+      "ceilings": {
+        "arts": 45,
+        "health": 300,
+        "business": 170,
+        "technology": 120
+      }
+    },
+    "10066": {
+      "source": "https://okm.fi/documents/1410845/3992623/Yrkesh%C3%B6gskolan%2BNovia%2Bavtal%2B2025-2028.pdf/d8c6a535-27d0-0ace-ef87-48060d1f7aae?t=1738563531154&version=1.2",
+      "ceilings": {
+        "arts": 70,
+        "health": 400,
+        "business": 200,
+        "technology": 350
+      }
+    }
+  }
+}

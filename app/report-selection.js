@@ -4,8 +4,10 @@ export const DEFAULTS = {
   year: "2025",
   comparison: "sector",
   level: "both",
-  funding: "included",
+  funding: "all",
   field: "",
+  peers: "",
+  trend: "count",
 };
 
 export const LEVELS = { both: "All levels", bachelor: "Bachelor’s", master: "Master’s" };
@@ -22,13 +24,17 @@ export function readSelection(params, dataset) {
     level: Object.keys(LEVELS),
     funding: Object.keys(FUNDING),
     field: Object.keys(dataset.fields),
+    peers: [],
+    trend: ["count", "rank"],
   };
   const selection = Object.fromEntries(Object.entries(DEFAULTS).map(([key, fallback]) => [
     key, allowed[key].includes(params.get(key)) ? params.get(key) : fallback,
   ]));
+  selection.peers = [...new Set((params.get("peers") ?? "").split(",").filter(id => Object.hasOwn(dataset.institutions, id)))].join(",");
   if (!params.has("view") && ["institution", "year", "level", "funding", "field"].some((key) => params.has(key))) {
     selection.view = "awards";
   }
+  if (selection.view === "completion" && !params.has("funding")) selection.funding = "included";
   if (selection.comparison === selection.institution) selection.comparison = "sector";
   return selection;
 }
@@ -36,7 +42,7 @@ export function readSelection(params, dataset) {
 export function selectionUrl(selection) {
   const params = new URLSearchParams();
   for (const [key, value] of Object.entries(selection)) {
-    if (value !== DEFAULTS[key]) params.set(key, value);
+    if (value !== DEFAULTS[key] || (key === "funding" && selection.view === "completion")) params.set(key, value);
   }
   if (params.size && !params.has("view")) params.set("view", selection.view);
   return params.size ? `/?${params}` : "/";

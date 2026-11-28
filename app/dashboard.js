@@ -23,6 +23,8 @@ import {
 } from "lucide-react";
 import { TrendPanel, BreakdownPanel } from "./charts";
 import { agreements } from "../data/institutions-config";
+import { fundingComparisons } from "./comparisons";
+import AwardComparison from "./award-comparison";
 import FundingOverview from "./funding/overview";
 import CompletionView from "./funding/completion";
 import { completion, scope as completionScope } from "./funding/results";
@@ -138,9 +140,7 @@ function SourceDialog({ dialog, data }) {
           </dd>
           <dt>Agreement targets</dt>
           <dd>
-            Arcada’s 2025 agreement covers bachelor’s degrees excluding
-            commissioned education. The field mapping awaits written
-            confirmation.{" "}
+            Funding uses each ministry agreement’s field groups and three complete activity years of bachelor’s awards excluding commissioned education.{" "}
               <a href={agreements["02535"][2025].source}>
               Annual report, Table 2
             </a>
@@ -174,7 +174,6 @@ export default function Dashboard({ dataset }) {
   const { institutions, fields, records, metadata } = dataset;
   const [filters, setFilters] = useState(DEFAULTS);
   const [sidebar, setSidebar] = useState(false);
-  const [peersExpanded, setPeersExpanded] = useState(false);
   const dialog = useRef(null);
   const filterTrigger = useRef(null);
   const filterClose = useRef(null);
@@ -280,47 +279,20 @@ export default function Dashboard({ dataset }) {
     bachelor: level === "master" ? null : count(y, institution, "bachelor"),
     master: level === "bachelor" ? null : count(y, institution, "master"),
   }));
-  const agreement = agreements[institution]?.[year];
-  const applicable = agreement && level !== "master" && funding === "included";
-  const targetGroups = applicable
-    ? agreement.groups.filter(
-        (g) => !field || (g.fields.length === 1 && g.fields[0] === field),
-      )
-    : [];
-  const targets = targetGroups.length
-    ? targetGroups.map((g) => {
-        const values = g.fields.map((f) =>
-          count(year, institution, "bachelor", f, "included"),
-        );
-        return {
-          label: g.name,
-          target: g.target,
-          value: values.every((v) => v != null)
-            ? values.reduce((a, b) => a + b, 0)
-            : null,
-        };
-      })
+  const targets = isAwards && level !== "master" && funding === "included"
+    ? fundingComparisons(dataset, year)
+        .filter(group => !field || group.fields.includes(field))
+        .flatMap(group => {
+          const school = group.schools.find(row => row.id === institution);
+          return school.ceiling == null ? [] : [{ label: group.name, target: school.ceiling, value: school.annual }];
+        })
     : null;
   const goal = targets?.reduce((s, g) => s + g.target, 0);
-  const achieved = targets?.every((g) => g.value != null)
+  const achieved = targets?.length && targets.every((g) => g.value != null)
     ? targets.reduce((s, g) => s + g.value, 0)
     : null;
   const attainment =
     goal && achieved != null ? Math.round((100 * achieved) / goal) : null;
-  const peers = institutionList
-    .map(([id, name]) => ({
-      id,
-      name,
-      value: count(year, id),
-      prior: count(year - 1, id),
-    }))
-    .sort(
-      (a, b) =>
-        (b.value ?? -1) - (a.value ?? -1) || a.name.localeCompare(b.name),
-    );
-  const selectionIndex = peers.findIndex((p) => p.id === institution);
-  const start = Math.max(0, Math.min(selectionIndex - 2, peers.length - 5));
-  const displayed = peersExpanded ? peers : peers.slice(start, start + 5);
   function exportCsv() {
     const headers = [
       "Institution code",
@@ -426,10 +398,11 @@ export default function Dashboard({ dataset }) {
           <SelectFilter
             label="Compare with"
             value={comparison}
-            options={[["sector", "Finnish UAS sector"], ...institutionList.filter(([id]) => id !== institution)
+            options={[["sector", view === "completion" ? "Finnish UAS sector" : "All schools"], ...institutionList.filter(([id]) => id !== institution)
               .map(([id, name]) => [id, shortName(name)])]}
             change={(v) => set("comparison", v)}
           />
+          {isFunding && <SelectFilter label="Field of education" value={field} options={[["", "All fields"], ...Object.entries(fields)]} change={(v) => set("field", v)} />}
           {!isFunding && <>
           <div className="side-rule" />
           <div className="filter-heading"><span className="side-label">Degree filters</span></div>
@@ -445,8 +418,7 @@ export default function Dashboard({ dataset }) {
             options={[
               ["", "All fields"],
               ...Object.entries(fields)
-                .map(([k, v]) => [k, shortField(v)])
-                .sort((a, b) => a[1].localeCompare(b[1])),
+                .map(([k, v]) => [k, shortField(v)]),
             ]}
             change={(v) => set("field", v)}
           />
@@ -521,13 +493,14 @@ export default function Dashboard({ dataset }) {
             {reportLink({ ...filters, view: "awards" }, "Awards", { current: isAwards })}
             {reportLink({ ...filters, view: "completion" }, "Completion time", { current: !isAwards })}
           </nav>}
-          {isFunding && <FundingOverview dataset={dataset} selection={filters} completionLink={reportLink(
+          {isFunding && <FundingOverview dataset={dataset} selection={filters} onField={v => set("field", v)} completionLink={reportLink(
             { ...filters, ...completionScope, view: "completion" }, "View completion times", { className: "report-action" },
           )} />}
           {view === "completion" && <CompletionView dataset={dataset} selection={filters} verifiedLink={reportLink(
             { ...filters, ...completionScope, year: String(completion.year) }, "Open the verified 2025 comparison", { className: "report-action" },
           )} />}
           {isAwards && <>
+          <AwardComparison dataset={dataset} selection={filters} set={set} />
           <div className="metrics">
             <Metric
               accent
@@ -572,7 +545,7 @@ export default function Dashboard({ dataset }) {
                   ? format(achieved) +
                     " of " +
                     format(goal) +
-                    " agreement target"
+                    " annual group target"
                   : "No comparable target for this selection"
               }
             >
@@ -590,7 +563,7 @@ export default function Dashboard({ dataset }) {
                   </div>
                   <h2>Degrees by field</h2>
                 </div>
-                <span className="unit">2023–25</span>
+                <span className="unit">{years[0]}–{years.at(-1)}</span>
               </div>
               <div className="table-scroll">
                 <table>
@@ -667,75 +640,7 @@ export default function Dashboard({ dataset }) {
                 if (key) set("field", field ? "" : key);
               }}
             />
-            <section className="panel peer">
-              <div className="panel-header">
-                <div>
-                  <div className="overline">
-                    <Building2 size={13} />
-                    Peer comparison
-                  </div>
-                  <h2>Institution rankings</h2>
-                </div>
-                <span className="unit">{year}</span>
-              </div>
-              <div className="table-scroll">
-                <table>
-                  <caption className="sr">
-                    Peer rankings by degree count using current filters
-                  </caption>
-                  <thead>
-                    <tr>
-                      <th>Rank</th>
-                      <th>Institution</th>
-                      <th>Degrees</th>
-                      <th>Change</th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    {displayed.map((p) => (
-                      <tr
-                        className={p.id === institution ? "chosen" : ""}
-                        key={p.id}
-                      >
-                        <td>
-                          {p.value == null
-                            ? "—"
-                            : peers.findIndex(
-                                (other) => other.value === p.value,
-                              ) + 1}
-                        </td>
-                        <th scope="row">
-                          <button
-                            className="text-btn"
-                            title={p.name}
-                            onClick={() => set("institution", p.id)}
-                          >
-                            {shortName(p.name)}
-                          </button>
-                        </th>
-                        <td>{format(p.value)}</td>
-                        <td>{signed(diff(p.value, p.prior))}</td>
-                      </tr>
-                    ))}
-                  </tbody>
-                </table>
-              </div>
-              <button
-                className="all-peers"
-                aria-expanded={peersExpanded}
-                onClick={() => setPeersExpanded(!peersExpanded)}
-              >
-                {peersExpanded
-                  ? "Show selected peers"
-                  : "View all " + peers.length + " institutions"}
-                <ChevronDown
-                  size={14}
-                  style={{
-                    transform: peersExpanded ? "rotate(180deg)" : undefined,
-                  }}
-                />
-              </button>
-            </section>
+
           </div>
           {metadata.knownDifferences
             .filter((x) => x.institution === institution && x.year === year)

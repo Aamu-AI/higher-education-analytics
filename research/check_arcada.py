@@ -93,7 +93,17 @@ def levels(rows):
     return counts[BACHELOR], counts[MASTER]
 
 
+def historical_totals(rows, read):
+    counts = tally(rows, "koodiKorkeakoulu")
+    for code, value in counts.items():
+        check(f"{code} Vipunen awards / StatFin 13k9", value, read(code))
+    return counts
+
+
 def check_arcada(year, rows, read):
+    if year < 2023:
+        historical_totals(rows, read)
+        return
     rows = [r for r in rows if r["koodiKorkeakoulu"] == ARCADA]
     included = [r for r in rows if r["rahoituslahde"] != COMMISSIONED]
     check("Arcada nursing starters excluding commissioned education",
