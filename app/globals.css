@@ -988,3 +988,16 @@ footer button:hover {
   .rankings-scroll td::before {content:attr(data-label);display:block;font-size:.7rem;color:var(--muted);}
   .rankings-scroll .annual-rank::before {display:inline;margin-right:4px;}
 }
+
+.compare-checklist { margin: 0 0 16px; font-size:.86rem; }
+.compare-checklist summary { cursor:pointer; list-style:none; }
+.compare-checklist summary::-webkit-details-marker { display:none; }
+.compare-checklist summary > span {display:block;font-size:.78rem;font-weight:600;margin-bottom:6px;}
+.compare-checklist summary strong {display:flex;align-items:center;justify-content:space-between;gap:8px;min-height:40px;padding:7px 10px;background:#202822;border:1px solid var(--line);border-radius:5px;}
+.compare-checklist[open] summary svg { transform:rotate(180deg); }
+.compare-checklist fieldset {border:1px solid var(--line);border-radius:5px;margin:4px 0 0;padding:3px 8px;max-height:15rem;overflow:auto;min-width:0;}
+.compare-checklist label {display:flex;align-items:center;gap:7px;min-height:32px;cursor:pointer;}
+.compare-checklist label:first-of-type {border-bottom:1px solid var(--line);font-weight:650;}
+.compare-checklist input {accent-color:var(--lime);width:16px;height:16px;flex:none;}
+.rankings-scroll table {min-width:610px;}
+@media(max-width:680px){.rankings-scroll table {min-width:0;}}

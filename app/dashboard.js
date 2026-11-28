@@ -30,7 +30,7 @@ import CompletionView from "./funding/completion";
 import { completion, scope as completionScope } from "./funding/results";
 import {
   DEFAULTS, FUNDING, LEVELS, awardCount, comparisonAwards, comparisonName,
-  downloadCsv, makeCsv, readSelection, selectedSchools, selectionUrl,
+  downloadCsv, makeCsv, readSelection, selectedChartYears, selectedSchools, selectionUrl,
 } from "./report-selection";
 
 const format = (value) =>
@@ -64,6 +64,25 @@ function SelectFilter({ label, value, options, change }) {
       </span>
     </label>
   );
+}
+
+function CompareChecklist({ title, allLabel, options, selected, onChange }) {
+  const allRef = useRef(null);
+  const all = selected.length === options.length;
+  useEffect(() => {
+    allRef.current.indeterminate = selected.length > 0 && !all;
+  }, [selected.length, all]);
+  const summary = all ? allLabel : selected.length === 1
+    ? options.find(([key]) => key === selected[0])?.[1] : selected.length + " selected";
+  return <details className="compare-checklist">
+    <summary><span>{title}</span><strong>{summary}<ChevronDown size={15} aria-hidden="true"/></strong></summary>
+    <fieldset><legend className="sr">{title}</legend>
+      <label><input type="checkbox" ref={allRef} checked={all}
+        onChange={() => onChange(all ? [] : options.map(([key]) => key))}/>{allLabel}</label>
+      {options.map(([key, name]) => <label key={key}><input type="checkbox" checked={selected.includes(key)}
+        onChange={() => onChange(selected.includes(key) ? selected.filter(id => id !== key) : [...selected, key])}/>{name}</label>)}
+    </fieldset>
+  </details>;
 }
 
 function Logo() {
@@ -198,7 +217,7 @@ export default function Dashboard({ dataset }) {
       if (e.key === "Tab") {
         const nodes = [
           ...filterAside.current.querySelectorAll(
-            "button:not(:disabled),select,a[href]",
+            "button:not(:disabled),select,summary,input:not(:disabled),a[href]",
           ),
         ].filter((el) => el.offsetParent !== null);
         if (e.shiftKey && document.activeElement === nodes[0]) {
@@ -232,6 +251,8 @@ export default function Dashboard({ dataset }) {
   const reportTitle = isFunding ? "Funding" : "Degree awards";
   const year = Number(filters.year);
   const { years } = metadata;
+  const chartYears = selectedChartYears(filters.chartYears, years);
+  const checkedSchools = selectedSchools(filters);
   const institutionList = Object.entries(institutions).sort((a, b) =>
     a[1].localeCompare(b[1], "en"),
   );
@@ -249,8 +270,8 @@ export default function Dashboard({ dataset }) {
   function count(y, id = institution, which = level, policy = field, measure = funding) {
     return awardCount(dataset, { year: y, institution: id, level: which, field: policy, funding: measure });
   }
-  const compared = comparisonAwards(dataset, filters);
-  const compareLabel = comparisonName(dataset, comparison);
+  const compared = comparisonAwards(dataset, { ...filters, comparison: "sector" });
+  const compareLabel = comparisonName(dataset, "sector");
   const total = count(year),
     prior = count(year - 1),
     delta = diff(total, prior);
@@ -346,9 +367,13 @@ export default function Dashboard({ dataset }) {
         "Selected institution",
         "",
       ]);
-    body.push([comparison === "sector" ? "" : comparison, compareLabel, year, LEVELS[level],
+    body.push(["", compareLabel, year, LEVELS[level],
       field ? fields[field] : "All fields", FUNDING[funding], compared.value, ...provenance,
-      "Selected comparison", comparison === "sector" ? compared.codes.join(" ") : ""]);
+      "Sector benchmark", compared.codes.join(" ")]);
+    for (const id of checkedSchools) {
+      body.push([id, institutions[id], year, LEVELS[level], field ? fields[field] : "All fields", FUNDING[funding],
+        count(year, id), ...provenance, "Selected comparison", ""]);
+    }
     downloadCsv(makeCsv([headers, ...body]), `degree-awards-${institution}-${year}.csv`);
   }
   function closeFilters() {
@@ -396,18 +421,24 @@ export default function Dashboard({ dataset }) {
             change={(v) => set("institution", v)}
           />
           <SelectFilter
-            label="Reporting year"
+            label={isAwards ? "Ranking year" : "Reporting year"}
             value={filters.year}
             options={years.toReversed().map((y) => [String(y), String(y)])}
             change={(v) => set("year", v)}
           />
-          <SelectFilter
+          {isAwards ? <>
+            <CompareChecklist title="Compare schools" allLabel="All schools"
+              options={institutionList.map(([id, name]) => [id, shortName(name)])} selected={checkedSchools}
+              onChange={ids => set("schools", ids.join(",") || "none")}/>
+            <CompareChecklist title="Chart years" allLabel="All years" options={years.map(y => [y, String(y)])}
+              selected={chartYears} onChange={values => set("chartYears", values.length === years.length ? "" : values.sort((a,b) => a-b).join(",") || "none")}/>
+          </> : <SelectFilter
             label="Compare with"
             value={comparison}
             options={[["sector", view === "completion" ? "Finnish UAS sector" : "All schools"], ...institutionList.filter(([id]) => id !== institution)
               .map(([id, name]) => [id, shortName(name)])]}
             change={(v) => set("comparison", v)}
-          />
+          />}
           {isFunding && <SelectFilter label="Field of education" value={field} options={[["", "All fields"], ...Object.entries(fields)]} change={(v) => set("field", v)} />}
           {!isFunding && <>
           <div className="side-rule" />
@@ -520,10 +551,9 @@ export default function Dashboard({ dataset }) {
             >
               {format(total)}
             </Metric>
-            <Metric label="Selected comparison" icon={Building2}
-              note={compared.value == null ? `Unavailable · ${compareLabel}` : comparison === "sector" ?
-                `${compareLabel} · ${compared.codes.length} institutions with published counts` : compareLabel}>
-              {format(compared.value)}
+            <Metric label="Schools compared" icon={Building2}
+              note={checkedSchools.length <= 3 ? checkedSchools.map(id => institutions[id]).join(" · ") : "Selected in Compare schools"}>
+              {checkedSchools.length}
             </Metric>
             <Metric
               label="Year-on-year change"
@@ -630,13 +660,13 @@ export default function Dashboard({ dataset }) {
                 </table>
               </div>
             </section>
-            <TrendPanel
-              years={years}
+            {chartYears.length > 0 && <TrendPanel
+              years={chartYears}
               series={series}
               year={year}
               level={level}
               onYear={(y) => set("year", String(y))}
-            />
+            />}
             <BreakdownPanel
               items={bars}
               targets={targets}

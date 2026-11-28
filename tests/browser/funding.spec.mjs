@@ -58,7 +58,7 @@ test("shared comparison follows the user and unsupported timing retains its filt
   await page.getByRole("link", { name: "Funding", exact: true }).click();
   await expect(page.getByLabel("Compare with")).toHaveValue("02629");
   await page.getByRole("link", { name: "Degree awards", exact: true }).click();
-  await expect(page.getByRole("region", { name: "Selected comparison" })).toContainText("Laurea University of Applied Sciences");
+  await expect(page.getByRole("region", { name: "Schools compared" })).toContainText("Laurea University of Applied Sciences");
   await expect(page.getByLabel("Field of education")).toHaveValue("Terveys- ja hyvinvointialat");
   await page.getByRole("link", { name: "Completion time", exact: true }).click();
   await page.getByLabel("Compare with").selectOption("10056");

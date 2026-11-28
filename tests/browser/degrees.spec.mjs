@@ -29,7 +29,7 @@ test("funding definitions, shared URLs and CSV agree on Arcada’s 2025 figures"
   expect(csv).toContain("All funding sources");
   expect(csv).toContain('"Finnish UAS sector"');
   expect(csv).toContain('"Selected comparison"');
-  await page.getByLabel("Reporting year").selectOption("2024");
+  await page.getByLabel("Ranking year").selectOption("2024");
   await expect(total).toContainText("478");
   await page.getByRole("button", { name: "Reset filters" }).click();
   await expect(total).toContainText("573");
@@ -41,7 +41,7 @@ test("mobile filters and the equivalent trend table work with the keyboard", asy
   await page.setViewportSize({ width: 390, height: 844 });
   await page.goto("/?view=awards");
   await page.getByRole("button", { name: "Open filters" }).click();
-  await page.getByLabel("Reporting year").selectOption("2024");
+  await page.getByLabel("Ranking year").selectOption("2024");
   await page.keyboard.press("Escape");
   await expect(
     page.getByRole("button", { name: "Open filters" }),

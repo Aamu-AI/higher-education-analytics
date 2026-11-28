@@ -7,6 +7,7 @@ export const DEFAULTS = {
   funding: "all",
   field: "",
   schools: "",
+  chartYears: "",
   order: "awards",
   trend: "count",
 };
@@ -26,6 +27,12 @@ export function selectedSchools(selection) {
   return [...new Set([selection.institution, selection.comparison].filter(id => id !== "sector"))];
 }
 
+export function selectedChartYears(choice, years) {
+  if (!choice) return years;
+  const selected = choice.split(",");
+  return years.filter(year => selected.includes(String(year)));
+}
+
 export const LEVELS = { both: "All levels", bachelor: "Bachelor’s", master: "Master’s" };
 export const FUNDING = { included: "Exclude commissioned", all: "All funding sources" };
 
@@ -41,6 +48,7 @@ export function readSelection(params, dataset) {
     funding: Object.keys(FUNDING),
     field: Object.keys(dataset.fields),
     schools: [],
+    chartYears: [],
     order: Object.keys(AWARD_ORDERS),
     trend: ["count", "growth", "rank"],
   };
@@ -52,6 +60,12 @@ export function readSelection(params, dataset) {
   else if (checked.length) {
     const ids = params.has("schools") ? checked : [...selectedSchools(selection), ...checked];
     selection.schools = [...new Set(ids)].join(",");
+  }
+  const yearChoice = params.get("chartYears");
+  if (yearChoice === "none") selection.chartYears = "none";
+  else if (yearChoice) {
+    const valid = selectedChartYears(yearChoice, dataset.metadata.years);
+    if (valid.length && valid.length < dataset.metadata.years.length) selection.chartYears = valid.join(",");
   }
   if (!params.has("view") && ["institution", "year", "level", "funding", "field"].some((key) => params.has(key))) {
     selection.view = "awards";

@@ -33,3 +33,11 @@ Rank by total awards, year-on-year change in degrees, or attainment at either le
 Acceptance includes Arcada in 2025 with 573 total, 562 last year, growth of 11, 477 of 635 bachelor's and 84 of 110 master's. Verify three-school comparisons, keyboard toggles, links and reloads, signed growth, missing targets and equal rankings.
 
 The 44 signed agreement extracts supply the master's annual target for each school and period. The 2020 target columns remain unavailable. The growth trend uses consecutive annual counts under the selected definition, and the earliest available year has no change value. The local production build and all nine browser tests passed. The three-school comparison passed automated accessibility checks at 320, 390 and 1440 pixels. Keyboard selection, reload, the ranking export and the mobile target layout were checked.
+
+## National rankings and sidebar comparisons
+
+Keep school selection in the Degree awards sidebar. Compare opens with an All schools checkbox followed by individual schools. The ranking always includes the 22 covered institutions and highlights the user's selection. Keep the selected ranking rule, one ranking year, annual award change and separate target columns. Show upward or downward movement in positions, a dash for an unchanged position and a blank for an unavailable comparison.
+
+Chart years are independent of the ranking year. Offer all verified years initially, individual checkboxes, and All years. Preserve school and year choices in shared links, browser history, chart tables and the trend export. Selecting zero, one or several years must leave the national ranking intact. Funding and completion retain their existing comparison controls.
+
+The production build and all ten browser tests passed. The sidebar test checked all 22 national rows, school highlights, independent chart years, the trend CSV and reload. The open filters and the ranking passed automated WCAG A/AA checks at widths of 320, 390 and 1440 pixels with all 22 schools selected. Manual screen-reader listening remains unverified.
