@@ -1,0 +1,1021 @@
+{
+  "year": 2025,
+  "field": "Terveys- ja hyvinvointialat",
+  "resource": "tavoiteajassa_tutkinnon_suorittaneet",
+  "releaseType": "Lopullinen",
+  "releaseId": "8fa75fcf2b7bbebb18e266594107a95410195dc1b23c19bcc717cf4db8acedba",
+  "awardsInputHash": "e313def3d4312b971e82b15c974419833f4d9e021389024bdf623d01490481b0",
+  "sourceRows": 3089,
+  "sourceStamp": "2026-11-27",
+  "observedOn": "2026-03-23",
+  "retrievedAt": "2026-11-28",
+  "sectorInstitutions": [
+    "02467",
+    "02469",
+    "02471",
+    "02472",
+    "02473",
+    "02504",
+    "02507",
+    "02509",
+    "02535",
+    "02536",
+    "02537",
+    "02623",
+    "02627",
+    "02629",
+    "02630",
+    "02631",
+    "10065",
+    "10066",
+    "10108",
+    "10118",
+    "10126"
+  ],
+  "records": [
+    {
+      "institution": "02467",
+      "qualification": "671101",
+      "label": "Sairaanhoitaja (AMK)",
+      "onTime": 85,
+      "withinYear": 20,
+      "later": 23
+    },
+    {
+      "institution": "02467",
+      "qualification": "671103",
+      "label": "Terveydenhoitaja (AMK)",
+      "onTime": 56,
+      "withinYear": 5,
+      "later": 0
+    },
+    {
+      "institution": "02467",
+      "qualification": "671201",
+      "label": "Sosionomi (AMK), sosiaaliala",
+      "onTime": 115,
+      "withinYear": 34,
+      "later": 8
+    },
+    {
+      "institution": "02469",
+      "qualification": "671101",
+      "label": "Sairaanhoitaja (AMK)",
+      "onTime": 120,
+      "withinYear": 20,
+      "later": 7
+    },
+    {
+      "institution": "02469",
+      "qualification": "671103",
+      "label": "Terveydenhoitaja (AMK)",
+      "onTime": 19,
+      "withinYear": 3,
+      "later": 0
+    },
+    {
+      "institution": "02469",
+      "qualification": "671112",
+      "label": "Fysioterapeutti (AMK)",
+      "onTime": 37,
+      "withinYear": 10,
+      "later": 0
+    },
+    {
+      "institution": "02469",
+      "qualification": "671201",
+      "label": "Sosionomi (AMK), sosiaaliala",
+      "onTime": 94,
+      "withinYear": 17,
+      "later": 6
+    },
+    {
+      "institution": "02469",
+      "qualification": "671901",
+      "label": "Geronomi (AMK)",
+      "onTime": 33,
+      "withinYear": 0,
+      "later": 0
+    },
+    {
+      "institution": "02471",
+      "qualification": "671101",
+      "label": "Sairaanhoitaja (AMK)",
+      "onTime": 120,
+      "withinYear": 20,
+      "later": 10
+    },
+    {
+      "institution": "02471",
+      "qualification": "671103",
+      "label": "Terveydenhoitaja (AMK)",
+      "onTime": 30,
+      "withinYear": 1,
+      "later": 2
+    },
+    {
+      "institution": "02471",
+      "qualification": "671104",
+      "label": "Bioanalyytikko (AMK): laboratoriohoitaja (AMK)",
+      "onTime": 27,
+      "withinYear": 2,
+      "later": 3
+    },
+    {
+      "institution": "02471",
+      "qualification": "671105",
+      "label": "Röntgenhoitaja (AMK)",
+      "onTime": 24,
+      "withinYear": 3,
+      "later": 1
+    },
+    {
+      "institution": "02471",
+      "qualification": "671106",
+      "label": "Kätilö (AMK)",
+      "onTime": 22,
+      "withinYear": 9,
+      "later": 0
+    },
+    {
+      "institution": "02471",
+      "qualification": "671111",
+      "label": "Optometristi (AMK): optikko (AMK)",
+      "onTime": 21,
+      "withinYear": 14,
+      "later": 0
+    },
+    {
+      "institution": "02471",
+      "qualification": "671112",
+      "label": "Fysioterapeutti (AMK)",
+      "onTime": 24,
+      "withinYear": 0,
+      "later": 0
+    },
+    {
+      "institution": "02471",
+      "qualification": "671114",
+      "label": "Toimintaterapeutti (AMK)",
+      "onTime": 33,
+      "withinYear": 4,
+      "later": 0
+    },
+    {
+      "institution": "02471",
+      "qualification": "671116",
+      "label": "Ensihoitaja (AMK)",
+      "onTime": 37,
+      "withinYear": 5,
+      "later": 0
+    },
+    {
+      "institution": "02471",
+      "qualification": "671201",
+      "label": "Sosionomi (AMK), sosiaaliala",
+      "onTime": 93,
+      "withinYear": 9,
+      "later": 9
+    },
+    {
+      "institution": "02472",
+      "qualification": "671101",
+      "label": "Sairaanhoitaja (AMK)",
+      "onTime": 136,
+      "withinYear": 19,
+      "later": 6
+    },
+    {
+      "institution": "02472",
+      "qualification": "671103",
+      "label": "Terveydenhoitaja (AMK)",
+      "onTime": 20,
+      "withinYear": 0,
+      "later": 0
+    },
+    {
+      "institution": "02472",
+      "qualification": "671112",
+      "label": "Fysioterapeutti (AMK)",
+      "onTime": 31,
+      "withinYear": 2,
+      "later": 0
+    },
+    {
+      "institution": "02472",
+      "qualification": "671201",
+      "label": "Sosionomi (AMK), sosiaaliala",
+      "onTime": 94,
+      "withinYear": 24,
+      "later": 9
+    },
+    {
+      "institution": "02472",
+      "qualification": "671901",
+      "label": "Geronomi (AMK)",
+      "onTime": 16,
+      "withinYear": 3,
+      "later": 1
+    },
+    {
+      "institution": "02473",
+      "qualification": "671101",
+      "label": "Sairaanhoitaja (AMK)",
+      "onTime": 53,
+      "withinYear": 13,
+      "later": 6
+    },
+    {
+      "institution": "02473",
+      "qualification": "671103",
+      "label": "Terveydenhoitaja (AMK)",
+      "onTime": 20,
+      "withinYear": 1,
+      "later": 1
+    },
+    {
+      "institution": "02473",
+      "qualification": "671201",
+      "label": "Sosionomi (AMK), sosiaaliala",
+      "onTime": 36,
+      "withinYear": 3,
+      "later": 0
+    },
+    {
+      "institution": "02504",
+      "qualification": "671101",
+      "label": "Sairaanhoitaja (AMK)",
+      "onTime": 127,
+      "withinYear": 19,
+      "later": 7
+    },
+    {
+      "institution": "02504",
+      "qualification": "671106",
+      "label": "Kätilö (AMK)",
+      "onTime": 14,
+      "withinYear": 1,
+      "later": 1
+    },
+    {
+      "institution": "02504",
+      "qualification": "671112",
+      "label": "Fysioterapeutti (AMK)",
+      "onTime": 35,
+      "withinYear": 7,
+      "later": 1
+    },
+    {
+      "institution": "02504",
+      "qualification": "671114",
+      "label": "Toimintaterapeutti (AMK)",
+      "onTime": 47,
+      "withinYear": 11,
+      "later": 5
+    },
+    {
+      "institution": "02504",
+      "qualification": "671118",
+      "label": "Kuntoutuksen ohjaaja (AMK)",
+      "onTime": 40,
+      "withinYear": 12,
+      "later": 4
+    },
+    {
+      "institution": "02504",
+      "qualification": "671201",
+      "label": "Sosionomi (AMK), sosiaaliala",
+      "onTime": 58,
+      "withinYear": 12,
+      "later": 5
+    },
+    {
+      "institution": "02507",
+      "qualification": "671101",
+      "label": "Sairaanhoitaja (AMK)",
+      "onTime": 173,
+      "withinYear": 29,
+      "later": 20
+    },
+    {
+      "institution": "02507",
+      "qualification": "671112",
+      "label": "Fysioterapeutti (AMK)",
+      "onTime": 37,
+      "withinYear": 3,
+      "later": 1
+    },
+    {
+      "institution": "02507",
+      "qualification": "671118",
+      "label": "Kuntoutuksen ohjaaja (AMK)",
+      "onTime": 26,
+      "withinYear": 3,
+      "later": 3
+    },
+    {
+      "institution": "02507",
+      "qualification": "671201",
+      "label": "Sosionomi (AMK), sosiaaliala",
+      "onTime": 108,
+      "withinYear": 21,
+      "later": 6
+    },
+    {
+      "institution": "02507",
+      "qualification": "671901",
+      "label": "Geronomi (AMK)",
+      "onTime": 23,
+      "withinYear": 0,
+      "later": 1
+    },
+    {
+      "institution": "02509",
+      "qualification": "671101",
+      "label": "Sairaanhoitaja (AMK)",
+      "onTime": 207,
+      "withinYear": 34,
+      "later": 20
+    },
+    {
+      "institution": "02509",
+      "qualification": "671103",
+      "label": "Terveydenhoitaja (AMK)",
+      "onTime": 41,
+      "withinYear": 2,
+      "later": 0
+    },
+    {
+      "institution": "02509",
+      "qualification": "671104",
+      "label": "Bioanalyytikko (AMK): laboratoriohoitaja (AMK)",
+      "onTime": 31,
+      "withinYear": 3,
+      "later": 1
+    },
+    {
+      "institution": "02509",
+      "qualification": "671105",
+      "label": "Röntgenhoitaja (AMK)",
+      "onTime": 19,
+      "withinYear": 0,
+      "later": 1
+    },
+    {
+      "institution": "02509",
+      "qualification": "671106",
+      "label": "Kätilö (AMK)",
+      "onTime": 24,
+      "withinYear": 1,
+      "later": 0
+    },
+    {
+      "institution": "02509",
+      "qualification": "671112",
+      "label": "Fysioterapeutti (AMK)",
+      "onTime": 36,
+      "withinYear": 11,
+      "later": 3
+    },
+    {
+      "institution": "02509",
+      "qualification": "671114",
+      "label": "Toimintaterapeutti (AMK)",
+      "onTime": 36,
+      "withinYear": 4,
+      "later": 2
+    },
+    {
+      "institution": "02509",
+      "qualification": "671116",
+      "label": "Ensihoitaja (AMK)",
+      "onTime": 67,
+      "withinYear": 2,
+      "later": 0
+    },
+    {
+      "institution": "02509",
+      "qualification": "671201",
+      "label": "Sosionomi (AMK), sosiaaliala",
+      "onTime": 176,
+      "withinYear": 19,
+      "later": 12
+    },
+    {
+      "institution": "02535",
+      "qualification": "671101",
+      "label": "Sairaanhoitaja (AMK)",
+      "onTime": 51,
+      "withinYear": 8,
+      "later": 6
+    },
+    {
+      "institution": "02535",
+      "qualification": "671103",
+      "label": "Terveydenhoitaja (AMK)",
+      "onTime": 13,
+      "withinYear": 6,
+      "later": 2
+    },
+    {
+      "institution": "02535",
+      "qualification": "671106",
+      "label": "Kätilö (AMK)",
+      "onTime": 9,
+      "withinYear": 0,
+      "later": 1
+    },
+    {
+      "institution": "02535",
+      "qualification": "671112",
+      "label": "Fysioterapeutti (AMK)",
+      "onTime": 25,
+      "withinYear": 7,
+      "later": 5
+    },
+    {
+      "institution": "02535",
+      "qualification": "671114",
+      "label": "Toimintaterapeutti (AMK)",
+      "onTime": 11,
+      "withinYear": 1,
+      "later": 1
+    },
+    {
+      "institution": "02535",
+      "qualification": "671116",
+      "label": "Ensihoitaja (AMK)",
+      "onTime": 17,
+      "withinYear": 1,
+      "later": 1
+    },
+    {
+      "institution": "02535",
+      "qualification": "671201",
+      "label": "Sosionomi (AMK), sosiaaliala",
+      "onTime": 31,
+      "withinYear": 5,
+      "later": 4
+    },
+    {
+      "institution": "02536",
+      "qualification": "621703",
+      "label": "Yhteisöpedagogi (AMK)",
+      "onTime": 8,
+      "withinYear": 7,
+      "later": 7
+    },
+    {
+      "institution": "02536",
+      "qualification": "671101",
+      "label": "Sairaanhoitaja (AMK)",
+      "onTime": 33,
+      "withinYear": 7,
+      "later": 4
+    },
+    {
+      "institution": "02536",
+      "qualification": "671103",
+      "label": "Terveydenhoitaja (AMK)",
+      "onTime": 23,
+      "withinYear": 0,
+      "later": 0
+    },
+    {
+      "institution": "02536",
+      "qualification": "671201",
+      "label": "Sosionomi (AMK), sosiaaliala",
+      "onTime": 55,
+      "withinYear": 17,
+      "later": 14
+    },
+    {
+      "institution": "02537",
+      "qualification": "671101",
+      "label": "Sairaanhoitaja (AMK)",
+      "onTime": 113,
+      "withinYear": 21,
+      "later": 13
+    },
+    {
+      "institution": "02537",
+      "qualification": "671103",
+      "label": "Terveydenhoitaja (AMK)",
+      "onTime": 25,
+      "withinYear": 6,
+      "later": 1
+    },
+    {
+      "institution": "02537",
+      "qualification": "671104",
+      "label": "Bioanalyytikko (AMK): laboratoriohoitaja (AMK)",
+      "onTime": 41,
+      "withinYear": 5,
+      "later": 3
+    },
+    {
+      "institution": "02537",
+      "qualification": "671105",
+      "label": "Röntgenhoitaja (AMK)",
+      "onTime": 32,
+      "withinYear": 2,
+      "later": 0
+    },
+    {
+      "institution": "02537",
+      "qualification": "671106",
+      "label": "Kätilö (AMK)",
+      "onTime": 28,
+      "withinYear": 3,
+      "later": 1
+    },
+    {
+      "institution": "02537",
+      "qualification": "671112",
+      "label": "Fysioterapeutti (AMK)",
+      "onTime": 36,
+      "withinYear": 5,
+      "later": 0
+    },
+    {
+      "institution": "02537",
+      "qualification": "671116",
+      "label": "Ensihoitaja (AMK)",
+      "onTime": 45,
+      "withinYear": 4,
+      "later": 0
+    },
+    {
+      "institution": "02537",
+      "qualification": "671201",
+      "label": "Sosionomi (AMK), sosiaaliala",
+      "onTime": 64,
+      "withinYear": 11,
+      "later": 4
+    },
+    {
+      "institution": "02623",
+      "qualification": "671101",
+      "label": "Sairaanhoitaja (AMK)",
+      "onTime": 199,
+      "withinYear": 33,
+      "later": 18
+    },
+    {
+      "institution": "02623",
+      "qualification": "671103",
+      "label": "Terveydenhoitaja (AMK)",
+      "onTime": 27,
+      "withinYear": 8,
+      "later": 1
+    },
+    {
+      "institution": "02623",
+      "qualification": "671201",
+      "label": "Sosionomi (AMK), sosiaaliala",
+      "onTime": 343,
+      "withinYear": 53,
+      "later": 36
+    },
+    {
+      "institution": "02627",
+      "qualification": "671101",
+      "label": "Sairaanhoitaja (AMK)",
+      "onTime": 58,
+      "withinYear": 26,
+      "later": 2
+    },
+    {
+      "institution": "02627",
+      "qualification": "671103",
+      "label": "Terveydenhoitaja (AMK)",
+      "onTime": 24,
+      "withinYear": 1,
+      "later": 0
+    },
+    {
+      "institution": "02627",
+      "qualification": "671201",
+      "label": "Sosionomi (AMK), sosiaaliala",
+      "onTime": 35,
+      "withinYear": 16,
+      "later": 8
+    },
+    {
+      "institution": "02629",
+      "qualification": "671101",
+      "label": "Sairaanhoitaja (AMK)",
+      "onTime": 270,
+      "withinYear": 59,
+      "later": 32
+    },
+    {
+      "institution": "02629",
+      "qualification": "671103",
+      "label": "Terveydenhoitaja (AMK)",
+      "onTime": 107,
+      "withinYear": 8,
+      "later": 6
+    },
+    {
+      "institution": "02629",
+      "qualification": "671112",
+      "label": "Fysioterapeutti (AMK)",
+      "onTime": 52,
+      "withinYear": 14,
+      "later": 1
+    },
+    {
+      "institution": "02629",
+      "qualification": "671201",
+      "label": "Sosionomi (AMK), sosiaaliala",
+      "onTime": 371,
+      "withinYear": 60,
+      "later": 39
+    },
+    {
+      "institution": "02629",
+      "qualification": "671202",
+      "label": "Sosiaali- ja terveysalan AMK, rikosseuraamusala",
+      "onTime": 50,
+      "withinYear": 5,
+      "later": 5
+    },
+    {
+      "institution": "02630",
+      "qualification": "671101",
+      "label": "Sairaanhoitaja (AMK)",
+      "onTime": 322,
+      "withinYear": 71,
+      "later": 18
+    },
+    {
+      "institution": "02630",
+      "qualification": "671103",
+      "label": "Terveydenhoitaja (AMK)",
+      "onTime": 58,
+      "withinYear": 3,
+      "later": 1
+    },
+    {
+      "institution": "02630",
+      "qualification": "671104",
+      "label": "Bioanalyytikko (AMK): laboratoriohoitaja (AMK)",
+      "onTime": 57,
+      "withinYear": 4,
+      "later": 4
+    },
+    {
+      "institution": "02630",
+      "qualification": "671105",
+      "label": "Röntgenhoitaja (AMK)",
+      "onTime": 23,
+      "withinYear": 4,
+      "later": 2
+    },
+    {
+      "institution": "02630",
+      "qualification": "671106",
+      "label": "Kätilö (AMK)",
+      "onTime": 21,
+      "withinYear": 1,
+      "later": 0
+    },
+    {
+      "institution": "02630",
+      "qualification": "671112",
+      "label": "Fysioterapeutti (AMK)",
+      "onTime": 35,
+      "withinYear": 3,
+      "later": 0
+    },
+    {
+      "institution": "02630",
+      "qualification": "671116",
+      "label": "Ensihoitaja (AMK)",
+      "onTime": 33,
+      "withinYear": 3,
+      "later": 0
+    },
+    {
+      "institution": "02630",
+      "qualification": "671201",
+      "label": "Sosionomi (AMK), sosiaaliala",
+      "onTime": 68,
+      "withinYear": 26,
+      "later": 17
+    },
+    {
+      "institution": "02631",
+      "qualification": "621703",
+      "label": "Yhteisöpedagogi (AMK)",
+      "onTime": 186,
+      "withinYear": 53,
+      "later": 31
+    },
+    {
+      "institution": "10065",
+      "qualification": "671101",
+      "label": "Sairaanhoitaja (AMK)",
+      "onTime": 297,
+      "withinYear": 43,
+      "later": 25
+    },
+    {
+      "institution": "10065",
+      "qualification": "671103",
+      "label": "Terveydenhoitaja (AMK)",
+      "onTime": 56,
+      "withinYear": 5,
+      "later": 2
+    },
+    {
+      "institution": "10065",
+      "qualification": "671104",
+      "label": "Bioanalyytikko (AMK): laboratoriohoitaja (AMK)",
+      "onTime": 43,
+      "withinYear": 18,
+      "later": 2
+    },
+    {
+      "institution": "10065",
+      "qualification": "671105",
+      "label": "Röntgenhoitaja (AMK)",
+      "onTime": 61,
+      "withinYear": 5,
+      "later": 0
+    },
+    {
+      "institution": "10065",
+      "qualification": "671106",
+      "label": "Kätilö (AMK)",
+      "onTime": 47,
+      "withinYear": 4,
+      "later": 2
+    },
+    {
+      "institution": "10065",
+      "qualification": "671111",
+      "label": "Optometristi (AMK): optikko (AMK)",
+      "onTime": 33,
+      "withinYear": 8,
+      "later": 1
+    },
+    {
+      "institution": "10065",
+      "qualification": "671112",
+      "label": "Fysioterapeutti (AMK)",
+      "onTime": 73,
+      "withinYear": 10,
+      "later": 4
+    },
+    {
+      "institution": "10065",
+      "qualification": "671113",
+      "label": "Jalkaterapeutti (AMK)",
+      "onTime": 19,
+      "withinYear": 1,
+      "later": 0
+    },
+    {
+      "institution": "10065",
+      "qualification": "671114",
+      "label": "Toimintaterapeutti (AMK)",
+      "onTime": 42,
+      "withinYear": 15,
+      "later": 1
+    },
+    {
+      "institution": "10065",
+      "qualification": "671115",
+      "label": "Apuvälineteknikko (AMK): apuneuvoteknikko (AMK)",
+      "onTime": 14,
+      "withinYear": 1,
+      "later": 2
+    },
+    {
+      "institution": "10065",
+      "qualification": "671116",
+      "label": "Ensihoitaja (AMK)",
+      "onTime": 42,
+      "withinYear": 10,
+      "later": 5
+    },
+    {
+      "institution": "10065",
+      "qualification": "671117",
+      "label": "Osteopaatti (AMK)",
+      "onTime": 17,
+      "withinYear": 2,
+      "later": 3
+    },
+    {
+      "institution": "10065",
+      "qualification": "671201",
+      "label": "Sosionomi (AMK), sosiaaliala",
+      "onTime": 95,
+      "withinYear": 42,
+      "later": 18
+    },
+    {
+      "institution": "10065",
+      "qualification": "671901",
+      "label": "Geronomi (AMK)",
+      "onTime": 27,
+      "withinYear": 6,
+      "later": 1
+    },
+    {
+      "institution": "10066",
+      "qualification": "671101",
+      "label": "Sairaanhoitaja (AMK)",
+      "onTime": 86,
+      "withinYear": 9,
+      "later": 7
+    },
+    {
+      "institution": "10066",
+      "qualification": "671103",
+      "label": "Terveydenhoitaja (AMK)",
+      "onTime": 23,
+      "withinYear": 2,
+      "later": 2
+    },
+    {
+      "institution": "10066",
+      "qualification": "671104",
+      "label": "Bioanalyytikko (AMK): laboratoriohoitaja (AMK)",
+      "onTime": 7,
+      "withinYear": 0,
+      "later": 1
+    },
+    {
+      "institution": "10066",
+      "qualification": "671105",
+      "label": "Röntgenhoitaja (AMK)",
+      "onTime": 8,
+      "withinYear": 0,
+      "later": 0
+    },
+    {
+      "institution": "10066",
+      "qualification": "671106",
+      "label": "Kätilö (AMK)",
+      "onTime": 9,
+      "withinYear": 2,
+      "later": 0
+    },
+    {
+      "institution": "10066",
+      "qualification": "671201",
+      "label": "Sosionomi (AMK), sosiaaliala",
+      "onTime": 103,
+      "withinYear": 13,
+      "later": 9
+    },
+    {
+      "institution": "10108",
+      "qualification": "671101",
+      "label": "Sairaanhoitaja (AMK)",
+      "onTime": 134,
+      "withinYear": 30,
+      "later": 10
+    },
+    {
+      "institution": "10108",
+      "qualification": "671103",
+      "label": "Terveydenhoitaja (AMK)",
+      "onTime": 47,
+      "withinYear": 5,
+      "later": 3
+    },
+    {
+      "institution": "10108",
+      "qualification": "671112",
+      "label": "Fysioterapeutti (AMK)",
+      "onTime": 35,
+      "withinYear": 7,
+      "later": 0
+    },
+    {
+      "institution": "10108",
+      "qualification": "671201",
+      "label": "Sosionomi (AMK), sosiaaliala",
+      "onTime": 100,
+      "withinYear": 17,
+      "later": 10
+    },
+    {
+      "institution": "10108",
+      "qualification": "671901",
+      "label": "Geronomi (AMK)",
+      "onTime": 21,
+      "withinYear": 1,
+      "later": 2
+    },
+    {
+      "institution": "10118",
+      "qualification": "621703",
+      "label": "Yhteisöpedagogi (AMK)",
+      "onTime": 34,
+      "withinYear": 16,
+      "later": 14
+    },
+    {
+      "institution": "10118",
+      "qualification": "671101",
+      "label": "Sairaanhoitaja (AMK)",
+      "onTime": 173,
+      "withinYear": 34,
+      "later": 21
+    },
+    {
+      "institution": "10118",
+      "qualification": "671103",
+      "label": "Terveydenhoitaja (AMK)",
+      "onTime": 61,
+      "withinYear": 4,
+      "later": 1
+    },
+    {
+      "institution": "10118",
+      "qualification": "671112",
+      "label": "Fysioterapeutti (AMK)",
+      "onTime": 41,
+      "withinYear": 4,
+      "later": 2
+    },
+    {
+      "institution": "10118",
+      "qualification": "671113",
+      "label": "Jalkaterapeutti (AMK)",
+      "onTime": 11,
+      "withinYear": 2,
+      "later": 0
+    },
+    {
+      "institution": "10118",
+      "qualification": "671116",
+      "label": "Ensihoitaja (AMK)",
+      "onTime": 58,
+      "withinYear": 9,
+      "later": 3
+    },
+    {
+      "institution": "10118",
+      "qualification": "671201",
+      "label": "Sosionomi (AMK), sosiaaliala",
+      "onTime": 184,
+      "withinYear": 53,
+      "later": 23
+    },
+    {
+      "institution": "10118",
+      "qualification": "671901",
+      "label": "Geronomi (AMK)",
+      "onTime": 33,
+      "withinYear": 11,
+      "later": 4
+    },
+    {
+      "institution": "10126",
+      "qualification": "671101",
+      "label": "Sairaanhoitaja (AMK)",
+      "onTime": 178,
+      "withinYear": 50,
+      "later": 23
+    },
+    {
+      "institution": "10126",
+      "qualification": "671103",
+      "label": "Terveydenhoitaja (AMK)",
+      "onTime": 60,
+      "withinYear": 2,
+      "later": 0
+    },
+    {
+      "institution": "10126",
+      "qualification": "671112",
+      "label": "Fysioterapeutti (AMK)",
+      "onTime": 93,
+      "withinYear": 11,
+      "later": 3
+    },
+    {
+      "institution": "10126",
+      "qualification": "671116",
+      "label": "Ensihoitaja (AMK)",
+      "onTime": 128,
+      "withinYear": 20,
+      "later": 2
+    },
+    {
+      "institution": "10126",
+      "qualification": "671201",
+      "label": "Sosionomi (AMK), sosiaaliala",
+      "onTime": 129,
+      "withinYear": 23,
+      "later": 17
+    }
+  ]
+}

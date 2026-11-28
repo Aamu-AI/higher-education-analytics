@@ -9,7 +9,7 @@ from tempfile import NamedTemporaryFile
 from urllib.request import urlopen
 
 from check_arcada import (
-    AWARDS_FUNDING, BACHELOR, COMMISSIONED, MASTER, STATFIN, VIPUNEN_MEMBERS,
+    AWARDS_FUNDING, BACHELOR, COMMISSIONED, MASTER, NURSING, STATFIN, VIPUNEN_MEMBERS,
     check, check_arcada, check_sector, statfin, vipunen,
 )
 from probe import BASE
@@ -80,11 +80,21 @@ def institution_names():
 
 def build():
     records = []
+    starters = []
     stamps = set()
     counts = {}
     for year in YEARS:
         rows = vipunen(RESOURCE, f"koodiSektori=='4';aineistotyyppi=='Lopullinen';tilastovuosi=={year}")
         records.extend(summarize(year, rows))
+        by_institution = Counter()
+        for row in rows:
+            if row["koodiKoulutus"] == NURSING:
+                count = row["uudetOpiskelijat"]
+                if type(count) is not int or count < 0:
+                    raise ValueError(f"Invalid nursing starter count for {year}: {count!r}")
+                by_institution[row["koodiKorkeakoulu"]] += count if row["rahoituslahde"] != COMMISSIONED else 0
+        starters.extend({"year": year, "institution": code, "count": count}
+                        for code, count in sorted(by_institution.items()))
         stamps.update(row["tietojoukkoPaivitettyPvm"] for row in rows)
         counts[str(year)] = len(rows)
         read, members = statfin(year)
@@ -93,10 +103,10 @@ def build():
             check_sector(rows, read, members)
     if len(stamps) != 1:
         raise ValueError(f"Inconsistent source update dates: {stamps!r}")
-    return assemble(records, stamps.pop(), counts, institution_names())
+    return assemble(records, stamps.pop(), counts, institution_names(), starters)
 
 
-def assemble(records, source_stamp, counts, institutions):
+def assemble(records, source_stamp, counts, institutions, starters):
     metadata = {
         "source": "Vipunen – Education Statistics Finland",
         "resource": RESOURCE,
@@ -123,7 +133,8 @@ def assemble(records, source_stamp, counts, institutions):
         ],
     }
     return {"metadata": metadata, "institutions": institutions,
-            "fields": FIELD_NAMES, "records": records}
+            "fields": FIELD_NAMES, "nursingStarters": {"qualification": NURSING, "records": starters},
+            "records": records}
 
 
 def write_release(release, output):

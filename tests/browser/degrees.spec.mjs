@@ -4,7 +4,7 @@ import { readFile } from "node:fs/promises";
 test("funding definitions, shared URLs and CSV agree on Arcada’s 2025 figures", async ({
   page,
 }) => {
-  await page.goto("/");
+  await page.goto("/?view=awards");
   const total = page.getByRole("region", {
     name: "Degrees awarded",
     exact: true,
@@ -25,6 +25,8 @@ test("funding definitions, shared URLs and CSV agree on Arcada’s 2025 figures"
   expect(csv).toContain("https://creativecommons.org/licenses/by/4.0/"); // Licence URL and release metadata travel with every export.
   expect(csv).toContain("opiskelijat_ja_tutkinnot");
   expect(csv).toContain("All funding sources");
+  expect(csv).toContain('"Finnish UAS sector"');
+  expect(csv).toContain('"Selected comparison"');
   await page.getByLabel("Reporting year").selectOption("2024");
   await expect(total).toContainText("478");
   await page.getByRole("button", { name: "Reset filters" }).click();
@@ -35,7 +37,7 @@ test("mobile filters and the equivalent trend table work with the keyboard", asy
   page,
 }) => {
   await page.setViewportSize({ width: 390, height: 844 });
-  await page.goto("/");
+  await page.goto("/?view=awards");
   await page.getByRole("button", { name: "Open filters" }).click();
   await page.getByLabel("Reporting year").selectOption("2024");
   await page.keyboard.press("Escape");

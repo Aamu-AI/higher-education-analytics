@@ -8,6 +8,8 @@ from probe import get
 
 ARCADA = "02535"
 LAUREA = "02629"
+NURSING = "671101"
+ARCADA_NURSING_STARTERS = {2023: 72, 2024: 177, 2025: 304}
 BACHELOR = "Ammattikorkeakoulututkinto"
 MASTER = "Ylempi ammattikorkeakoulututkinto"
 COMMISSIONED = "Maksullinen tilauskoulutus"
@@ -94,6 +96,9 @@ def levels(rows):
 def check_arcada(year, rows, read):
     rows = [r for r in rows if r["koodiKorkeakoulu"] == ARCADA]
     included = [r for r in rows if r["rahoituslahde"] != COMMISSIONED]
+    check("Arcada nursing starters excluding commissioned education",
+          sum(r["uudetOpiskelijat"] for r in included if r["koodiKoulutus"] == NURSING),
+          ARCADA_NURSING_STARTERS[year])
     national = levels(rows)
     local = levels(included)
     check("Vipunen national awards", national, NATIONAL[year])

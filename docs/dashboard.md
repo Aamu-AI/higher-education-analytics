@@ -1,5 +1,11 @@
 # First degree-awards dashboard
 
+The [unified dashboard plan](unified-dashboard.md) supersedes the separate-page navigation below. Funding opens first in the local review version. Use `/?view=awards` to open the full awards report and its filters directly.
+
 Managers can compare Arcada’s published degree totals, field mix and agreement targets with the same years and definitions at peer institutions. The owner selected degree awards in the reference dashboard’s layout. This first version uses a reviewed, read-only aggregate extract in Next.js. It can run and be reviewed independently of the planned PostgreSQL importer. Production database migrations and survey ingestion remain separate milestones.
 
 Accept the dashboard when a user can select a UAS, year, level, field and funding definition, read values in tables, and export the selection with provenance. The default must show Arcada’s 561 degrees in 2025, one fewer than in 2024. Selecting all funding must give 573. Agreement targets apply only to supported bachelor populations. Distinguish an unavailable observation from a published zero. Verify desktop, narrow-screen and keyboard usage, the production build and the connected Vercel result.
+
+The funding page starts with Arcada’s 2025 health and welfare bachelor’s completion comparison. Refresh `data/completion.json` from PostgreSQL with `python research/completion_store.py` after running the standard migrations and degree-awards import. The completion importer checks each institution’s published awards, retains each verified release and pins the awards release used to validate it. The page and its CSV read the same snapshot. [Strategy and acceptance](funding-strategy.md) · [Staff validation](funding-validation.md)
+
+The local check on 28 November 2026 ran the live 2023–2025 reconciliation, repeated the completion import, passed six PostgreSQL tests and four production-build browser tests, and checked desktop and narrow layouts, keyboard navigation, table headers and the CSV. The public site was checked before the change. Publication requires owner approval. Staff sessions and a manual screen-reader pass remain pending.

@@ -14,8 +14,9 @@ import psycopg
 from psycopg import sql
 
 import degree_store as store
+import completion_store as completion
 from build_dashboard import write_release
-from check_arcada import BACHELOR, COMMISSIONED, VIPUNEN_MEMBERS
+from check_arcada import ARCADA, BACHELOR, COMMISSIONED, HEALTH, VIPUNEN_MEMBERS
 
 
 def fixture(year, release_type="Lopullinen"):
@@ -51,6 +52,36 @@ class StoreTests(unittest.TestCase):
         cls.con.close()
         cls.admin.execute(sql.SQL("DROP DATABASE {}").format(sql.Identifier(cls.dbname)))
         cls.admin.close()
+
+    def test_completion_release_reconciles_and_keeps_previous_version(self):
+        year = completion.YEAR
+        awards = fixture(year)
+        for row in awards:
+            row.update(okmOhjauksenAla=HEALTH, tutkinnot=205 if row["koodiKorkeakoulu"] == ARCADA else 3)
+        rows = [dict(row, tilastovuosi=year, koulutus="Test degree", kuukausi=3,
+                     koulutustyyppi="Test", koulutuskieli="fi", onAiempiKorkeakoulututkinto=0,
+                     tutkintopisteluokka=1.0, tietojenAjankohta="2026-03-23",
+                     tavoiteajassa=row["tutkinnot"] - 1, tavoiteaikaYlitettyKorkeintaan12Kk=1,
+                     tavoiteaikaYlitettyYli12Kk=0) for row in awards]
+        with self.con.transaction(force_rollback=True):
+            awards_id = ingest(self.con, year, awards)
+            release = completion.publish(self.con, fetch=lambda *_: rows)
+            self.assertEqual(completion.publish(self.con, fetch=lambda *_: rows[::-1]), release)
+            first = completion.snapshot(self.con, release)
+            self.assertEqual(first["records"][0]["qualification"], "001002")
+            self.assertEqual(first["sourceRows"], len(rows))
+            self.assertTrue(first["awardsInputHash"])
+
+            corrected = [dict(rows[0], tavoiteajassa=1, tavoiteaikaYlitettyKorkeintaan12Kk=2), *rows[1:]]
+            updated = completion.publish(self.con, fetch=lambda *_: corrected)
+            self.assertNotEqual(updated, release)
+            self.assertEqual(completion.snapshot(self.con, release), first)
+            invalid = [dict(rows[0], tutkinnot=4, tavoiteajassa=3), *rows[1:]]
+            with self.assertRaisesRegex(ValueError, "disagree with final awards"):
+                completion.publish(self.con, fetch=lambda *_: invalid)
+            self.assertEqual(dict(self.con.execute("""
+                SELECT resource,release_id FROM awards.current_release WHERE year=%s
+            """, (year,))), {store.RESOURCE: awards_id, completion.RESOURCE: updated})
 
     def test_reruns_corrections_deletions_and_rollback(self):
         year = 2030
@@ -152,12 +183,20 @@ class StoreTests(unittest.TestCase):
                                           (year,)).fetchone()[0], 1)
 
     def test_one_year_correction_preserves_other_releases_and_dates(self):
-        prior = {year: ingest(self.con, year, fixture(year)) for year in store.YEARS}
+        def with_starters(year):
+            rows = fixture(year)
+            if year == 2025:
+                row = next(row for row in rows if row["koodiKorkeakoulu"] == ARCADA)
+                row.update(koodiKoulutus=store.NURSING, uudetOpiskelijat=7)
+                rows.append(dict(row, rahoituslahde=COMMISSIONED, uudetOpiskelijat=9))
+            return rows
+
+        prior = {year: ingest(self.con, year, with_starters(year)) for year in store.YEARS}
         self.con.execute("UPDATE awards.release SET retrieved_at='2026-09-29 12:00:00+00' WHERE id=ANY(%s)",
                          (list(prior.values()),))
         current = {}
         for year in store.YEARS:
-            rows = fixture(year)
+            rows = with_starters(year)
             for row in rows:
                 row["tietojoukkoPaivitettyPvm"] = "2026-10-01"
             if year == 2024:
@@ -174,6 +213,8 @@ class StoreTests(unittest.TestCase):
             self.assertEqual(result["metadata"]["sourceStamp"], "2026-10-01")
             self.assertEqual(result["metadata"]["sourceStamps"], {
                 "2023": "2026-09-28", "2024": "2026-10-01", "2025": "2026-09-28"})
+            self.assertEqual(result["nursingStarters"], {"qualification": store.NURSING,
+                "records": [{"year": 2025, "institution": ARCADA, "count": 7}]})
             path_csv = Path(dest) / "degrees.csv"
             store.export_csv(self.con, path_csv)
             with path_csv.open(encoding="utf-8", newline="") as f:
