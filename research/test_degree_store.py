@@ -14,8 +14,9 @@ import psycopg
 from psycopg import sql
 
 import degree_store as store
+import completion_store as completion
 from build_dashboard import write_release
-from check_arcada import BACHELOR, COMMISSIONED, VIPUNEN_MEMBERS
+from check_arcada import ARCADA, BACHELOR, COMMISSIONED, HEALTH, VIPUNEN_MEMBERS
 
 
 def fixture(year, release_type="Lopullinen"):
@@ -51,6 +52,36 @@ class StoreTests(unittest.TestCase):
         cls.con.close()
         cls.admin.execute(sql.SQL("DROP DATABASE {}").format(sql.Identifier(cls.dbname)))
         cls.admin.close()
+
+    def test_completion_release_reconciles_and_keeps_previous_version(self):
+        year = completion.YEAR
+        awards = fixture(year)
+        for row in awards:
+            row.update(okmOhjauksenAla=HEALTH, tutkinnot=205 if row["koodiKorkeakoulu"] == ARCADA else 3)
+        rows = [dict(row, tilastovuosi=year, koulutus="Test degree", kuukausi=3,
+                     koulutustyyppi="Test", koulutuskieli="fi", onAiempiKorkeakoulututkinto=0,
+                     tutkintopisteluokka=1.0, tietojenAjankohta="2026-03-23",
+                     tavoiteajassa=row["tutkinnot"] - 1, tavoiteaikaYlitettyKorkeintaan12Kk=1,
+                     tavoiteaikaYlitettyYli12Kk=0) for row in awards]
+        with self.con.transaction(force_rollback=True):
+            awards_id = ingest(self.con, year, awards)
+            release = completion.publish(self.con, fetch=lambda *_: rows)
+            self.assertEqual(completion.publish(self.con, fetch=lambda *_: rows[::-1]), release)
+            first = completion.snapshot(self.con, release)
+            self.assertEqual(first["records"][0]["qualification"], "001002")
+            self.assertEqual(first["sourceRows"], len(rows))
+            self.assertTrue(first["awardsInputHash"])
+
+            corrected = [dict(rows[0], tavoiteajassa=1, tavoiteaikaYlitettyKorkeintaan12Kk=2), *rows[1:]]
+            updated = completion.publish(self.con, fetch=lambda *_: corrected)
+            self.assertNotEqual(updated, release)
+            self.assertEqual(completion.snapshot(self.con, release), first)
+            invalid = [dict(rows[0], tutkinnot=4, tavoiteajassa=3), *rows[1:]]
+            with self.assertRaisesRegex(ValueError, "disagree with final awards"):
+                completion.publish(self.con, fetch=lambda *_: invalid)
+            self.assertEqual(dict(self.con.execute("""
+                SELECT resource,release_id FROM awards.current_release WHERE year=%s
+            """, (year,))), {store.RESOURCE: awards_id, completion.RESOURCE: updated})
 
     def test_reruns_corrections_deletions_and_rollback(self):
         year = 2030

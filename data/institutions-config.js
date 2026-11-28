@@ -2,6 +2,10 @@
 export const agreements = {
   "02535": {
     2025: {
+      agreementUrl:
+        "https://okm.fi/documents/1410845/3991460/Yrkesh%C3%B6gskolan%2BArcada%2Bavtal%2B2025-2028.pdf/d8e3f5a8-d62c-9e9a-b2b3-591a98dab230?t=1738563519564&version=1.2",
+      period: "2025–2028",
+      allocation: { indicators: 14141000, strategy: 650000, vat: 1468000, discretionary: 159000 },
       source:
         "https://www.arcada.fi/sites/default/files/2026-04/Arcada%20University%20of%20Applied%20Sciences%20Annual%20Report%202025%20in%20Swedish.pdf",
       groups: [

@@ -542,6 +542,7 @@ export default function Dashboard({ dataset }) {
                 <span className="dot-sep">·</span>
                 {year}
               </p>
+              <a className="related-report" href="/funding">Funding and completion time</a>
             </div>
             <button
               className="export"

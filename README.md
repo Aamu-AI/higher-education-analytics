@@ -33,6 +33,7 @@ The import checks the public sources before activating a release. The dashboard 
 | --- | --- |
 | [Independent review](docs/review.md) | Verdict, verified discrepancies and open decisions |
 | [First dashboard](docs/dashboard.md) | Scope, layout and acceptance criteria |
+| [Funding and completion strategy](docs/funding-strategy.md) | The first funding decision, release criteria and build order |
 | [Product and implementation plan](docs/plan.md) | User decisions, dashboard concept, milestones and acceptance criteria |
 | [Data inventory](docs/data.md) | Verified coverage, comparison limits, survey access and source terms |
 | [Architecture and operations](docs/architecture.md) | Proposed schema, imports, privacy, migration workflow, hosting and costs |
