@@ -426,19 +426,22 @@ export default function Dashboard({ dataset }) {
             options={years.toReversed().map((y) => [String(y), String(y)])}
             change={(v) => set("year", v)}
           />
-          {isAwards ? <>
+          {view !== "completion" ?
             <CompareChecklist title="Compare schools" allLabel="All schools"
               options={institutionList.map(([id, name]) => [id, shortName(name)])} selected={checkedSchools}
-              onChange={ids => set("schools", ids.join(",") || "none")}/>
-            <CompareChecklist title="Chart years" allLabel="All years" options={years.map(y => [y, String(y)])}
-              selected={chartYears} onChange={values => set("chartYears", values.length === years.length ? "" : values.sort((a,b) => a-b).join(",") || "none")}/>
-          </> : <SelectFilter
+              onChange={ids => {
+                const peers = ids.filter(id => id !== institution);
+                apply({ ...filters, schools: ids.join(",") || "none", comparison: peers.length === 1 ? peers[0] : "sector" });
+              }}/>
+          : <SelectFilter
             label="Compare with"
             value={comparison}
-            options={[["sector", view === "completion" ? "Finnish UAS sector" : "All schools"], ...institutionList.filter(([id]) => id !== institution)
+            options={[["sector", "Finnish UAS sector"], ...institutionList.filter(([id]) => id !== institution)
               .map(([id, name]) => [id, shortName(name)])]}
             change={(v) => set("comparison", v)}
           />}
+          {isAwards && <CompareChecklist title="Chart years" allLabel="All years" options={years.map(y => [y, String(y)])}
+            selected={chartYears} onChange={values => set("chartYears", values.length === years.length ? "" : values.sort((a,b) => a-b).join(",") || "none")}/>}
           {isFunding && <SelectFilter label="Field of education" value={field} options={[["", "All fields"], ...Object.entries(fields)]} change={(v) => set("field", v)} />}
           {!isFunding && <>
           <div className="side-rule" />

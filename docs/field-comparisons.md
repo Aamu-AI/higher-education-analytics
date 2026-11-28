@@ -41,3 +41,11 @@ Keep school selection in the Degree awards sidebar. Compare opens with an All sc
 Chart years are independent of the ranking year. Offer all verified years initially, individual checkboxes, and All years. Preserve school and year choices in shared links, browser history, chart tables and the trend export. Selecting zero, one or several years must leave the national ranking intact. Funding and completion retain their existing comparison controls.
 
 The production build and all ten browser tests passed. The sidebar test checked all 22 national rows, school highlights, independent chart years, the trend CSV and reload. The open filters and the ranking passed automated WCAG A/AA checks at widths of 320, 390 and 1440 pixels with all 22 schools selected. Manual screen-reader listening remains unverified.
+
+## Funding school comparisons
+
+Funding shares the Degree awards school checklist so managers can compare the same peers across both views. Put All schools first. For a selected Vipunen field, show the agreement group's covered fields once, then each selected school's average, ceiling, uncapped share and selected-year group awards. All fields shows each agreement group. Keep the two field and group rankings national and highlight selected schools. The funding rule and signed agreements stay the same.
+
+Verify Arcada's 2025 arts average of 49 against 45, multiple schools with different ceilings, all 22 schools, an empty selection, missing agreements or incomplete windows, and selection persistence across views and downloads.
+
+The production build and 11 browser tests passed. The arts comparison reproduced Arcada at 108.9%, Karelia at 89.6%, and the missing group ceiling for Laurea. With all schools checked, all 22 rows appeared at 320, 390 and 1440 pixels without page overflow or automated WCAG A/AA findings.

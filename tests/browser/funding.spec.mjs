@@ -36,7 +36,9 @@ test("Funding leads to the reconciled completion and qualification comparisons",
 
 test("shared comparison follows the user and unsupported timing retains its filters", async ({ page }) => {
   await page.goto("/");
-  await page.getByLabel("Compare with").selectOption("02629");
+  const picker = page.locator("summary").filter({ hasText: "Compare schools" });
+  await picker.click();
+  await page.getByRole("checkbox", { name: "Laurea" }).check();
   await page.getByText("Health and welfare completion-time case", { exact: true }).click();
   await page.getByRole("link", { name: "View completion times" }).click();
   await expect(page).toHaveURL(/view=completion.*comparison=02629/);
@@ -56,7 +58,7 @@ test("shared comparison follows the user and unsupported timing retains its filt
   await page.goBack();
   await expect(page.getByLabel("Reporting year")).toHaveValue("2025");
   await page.getByRole("link", { name: "Funding", exact: true }).click();
-  await expect(page.getByLabel("Compare with")).toHaveValue("02629");
+  await expect(picker).toContainText("2 selected");
   await page.getByRole("link", { name: "Degree awards", exact: true }).click();
   await expect(page.getByRole("region", { name: "Schools compared" })).toContainText("Laurea University of Applied Sciences");
   await expect(page.getByLabel("Field of education")).toHaveValue("Terveys- ja hyvinvointialat");
@@ -82,4 +84,39 @@ test("Funding and Completion time work from the keyboard at narrow width", async
   await expect(page.getByRole("button", { name: "Open filters" })).toBeInViewport();
   await expect(page.getByRole("table", { name: /national qualification/ }).getByRole("row").nth(7)).toBeVisible();
   expect(await page.evaluate(() => document.documentElement.scrollWidth)).toBe(320);
+});
+
+test("Funding compares checked schools against their own group ceiling and preserves national ranks", async ({ page }) => {
+  await page.goto("/");
+  await page.getByLabel("Field of education").selectOption({ label: "Arts and culture" });
+  const group = page.getByRole("table", { name: "Selected schools · Education, arts and social sciences" });
+  const national = page.getByRole("table", { name: "Ministry group ranking" });
+  const arcada = group.getByRole("row", { name: /Arcada/ });
+  await expect(arcada.getByRole("cell")).toHaveText(["49", "45", "108.9%", "58"]);
+  const picker = page.locator("summary").filter({ hasText: "Compare schools" });
+  await picker.click();
+  const schools = page.getByRole("group", { name: "Compare schools" });
+  await expect(schools.getByRole("checkbox").first()).toHaveAccessibleName("All schools");
+  await schools.getByLabel("Laurea").check();
+  await schools.getByLabel("Karelia").check();
+  await expect(group.getByRole("row", { name: /Karelia/ }).getByRole("cell")).toHaveText(["40.3", "45", "89.6%", "49"]);
+  await expect(group.getByRole("row", { name: /Laurea/ })).toContainText("No ceiling listed for group");
+  await expect(national.locator("tbody tr.chosen")).toHaveCount(3);
+  const download = page.waitForEvent("download");
+  await page.getByRole("button", { name: "Export comparison CSV" }).click();
+  const csv = await readFile(await (await download).path(), "utf8");
+  expect(csv.split("\r\n").filter(line => line.startsWith('"Group overview",'))).toHaveLength(3);
+  expect(csv.split("\r\n").filter(line => line.startsWith('"Group ranking",'))).toHaveLength(22);
+  await page.getByRole("link", { name: "Degree awards", exact:true }).click();
+  await page.getByRole("link", { name: "Funding", exact:true }).click();
+  await page.reload();
+  await expect(group.locator("tbody tr")).toHaveCount(3);
+  await picker.click();
+  await schools.getByLabel("All schools").check();
+  await expect(group.locator("tbody tr")).toHaveCount(22);
+  await expect(national.locator("tbody tr.chosen")).toHaveCount(22);
+  await schools.getByLabel("All schools").uncheck();
+  await expect(page.getByText("Choose schools under Compare schools to see their funding ceilings.")).toBeVisible();
+  await expect(national.locator("tbody tr")).toHaveCount(22);
+  await expect(national.locator("tbody tr.chosen")).toHaveCount(0);
 });

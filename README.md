@@ -2,7 +2,7 @@
 
 This project helps Finnish higher education institutions use public statistics in management and programme reviews. Arcada University of Applied Sciences is the first use case. The first milestone reconciles national degree statistics with Arcada’s annual report. The proposed first management view compares bachelor’s awards with agreement targets by field.
 
-The local dashboard covers final degree awards from 2020 to 2025 for 22 Finnish universities of applied sciences. Funding compares three complete activity years of bachelor’s awards with ministry agreement ceilings. Each Vipunen field remains visible. Degree awards opens with 573 awards at Arcada in 2025 across all funding sources. Excluding commissioned education gives 561. The school ranking and peer trend use the same counting rule. [Comparison scope and verification](docs/field-comparisons.md)
+The local dashboard covers final degree awards from 2020 to 2025 for 22 Finnish universities of applied sciences. Funding compares three complete activity years of bachelor’s awards with ministry agreement ceilings. Choose schools on the left to compare their three-year averages, ministry ceilings and selected-year awards. Each Vipunen field remains visible, with shared ceilings identified by agreement group. Degree awards opens with 573 awards at Arcada in 2025 across all funding sources. Excluding commissioned education gives 561. The school ranking and peer trend use the same counting rule. [Comparison scope and verification](docs/field-comparisons.md)
 
 ## Run the site
 

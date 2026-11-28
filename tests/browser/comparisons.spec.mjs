@@ -6,9 +6,9 @@ test("ICT awards and the entire funding group have separate ranks, exports and p
 }) => {
   await page.goto("/");
   await expect(page.locator(".gap-note")).toContainText("84 degrees below");
-  const groups = page.getByRole("table", { name: /Ministry groups/ });
+  const arts = page.getByRole("table", { name: "Selected schools · Education, arts and social sciences" });
   await expect(
-    groups.getByRole("row", { name: /Education, arts and social/ }),
+    arts.getByRole("row", { name: /Arcada/ }),
   ).toContainText("108.9%");
   await page
     .getByLabel("Field of education")
@@ -34,7 +34,7 @@ test("ICT awards and the entire funding group have separate ranks, exports and p
   await page.getByLabel("Reporting year").selectOption("2021");
   await expect(own).toContainText("Three comparable years unavailable");
   await page.getByLabel("Reporting year").selectOption("2022");
-  await expect(groups).toContainText("2020–2022 average");
+  await expect(page.getByRole("table", { name: "Selected schools · Technology and ICT" })).toContainText("2020–2022 average");
 });
 
 test("annual peer lines and rank coverage follow filters and survive reload", async ({
