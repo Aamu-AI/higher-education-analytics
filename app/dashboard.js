@@ -30,7 +30,7 @@ import CompletionView from "./funding/completion";
 import { completion, scope as completionScope } from "./funding/results";
 import {
   DEFAULTS, FUNDING, LEVELS, awardCount, comparisonAwards, comparisonName,
-  downloadCsv, makeCsv, readSelection, selectionUrl,
+  downloadCsv, makeCsv, readSelection, selectedSchools, selectionUrl,
 } from "./report-selection";
 
 const format = (value) =>
@@ -219,7 +219,13 @@ export default function Dashboard({ dataset }) {
     const url = selectionUrl(next);
     if (url !== window.location.pathname + window.location.search) window.history.pushState(null, "", url);
   }
-  const set = (key, value) => apply({ ...filters, [key]: value });
+  function set(key, value) {
+    const next = { ...filters, [key]: value };
+    if (filters.schools && ["comparison", "institution"].includes(key) && value !== "sector") {
+      next.schools = [...new Set([...selectedSchools(filters), value])].join(",");
+    }
+    apply(next);
+  }
   const { institution, level, funding, field, comparison, view } = filters;
   const isFunding = view === "funding";
   const isAwards = view === "awards";

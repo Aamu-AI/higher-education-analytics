@@ -43,17 +43,19 @@ export function agreementPeriod(year) {
   return null;
 }
 
-export function rankSchools(rows) {
-  const sorted = rows
-    .slice()
-    .sort(
-      (a, b) =>
-        (b.value ?? -1) - (a.value ?? -1) || a.name.localeCompare(b.name),
-    );
-  let rank = null;
+export function rankSchools(rows, score = (row) => row.value) {
+  const sorted = rows.slice().sort((a, b) => {
+    const x = score(a),
+      y = score(b);
+    if (x == null && y != null) return 1;
+    if (y == null && x != null) return -1;
+    return y - x || a.name.localeCompare(b.name);
+  });
+  let rank;
   return sorted.map((row, index) => {
-    if (index === 0 || row.value !== sorted[index - 1].value) rank = index + 1;
-    return { ...row, rank: row.value == null ? null : rank };
+    const value = score(row);
+    if (index === 0 || value !== score(sorted[index - 1])) rank = index + 1;
+    return { ...row, rank: value == null ? null : rank };
   });
 }
 
@@ -118,4 +120,73 @@ export function fundingComparisons(dataset, year) {
     });
     return { ...group, schools: rankSchools(schools) };
   });
+}
+
+export function annualRankings(dataset, selection, order) {
+  const group = groups.find((g) => g.fields.includes(selection.field));
+  let previous = new Map();
+  let previousYear;
+  return dataset.metadata.years.map((year) => {
+    const agreements = ceilings[agreementPeriod(year)];
+    const bachelors = new Map();
+    const masters = new Map();
+    for (const row of dataset.records) {
+      if (row.year !== year) continue;
+      if (
+        row.level === "bachelor" &&
+        (!group || group.fields.includes(row.field))
+      ) {
+        bachelors.set(
+          row.institution,
+          (bachelors.get(row.institution) ?? 0) + row.included,
+        );
+      }
+      if (row.level === "master" && !group) {
+        masters.set(
+          row.institution,
+          (masters.get(row.institution) ?? 0) + row.all,
+        );
+      }
+    }
+    const rows = awardRanking(dataset, { ...selection, year }).map((row) => {
+      const agreement = agreements?.[row.id];
+      const before = previousYear === year - 1 ? previous.get(row.id) : null;
+      const bachelorTarget = group
+        ? agreement?.ceilings[group.key]
+        : agreement &&
+          Object.values(agreement.ceilings).reduce((sum, n) => sum + n, 0);
+      const masterTarget = group ? null : agreement?.masterTarget;
+      const bachelor = targetResult(bachelors.get(row.id), bachelorTarget);
+      const master = targetResult(masters.get(row.id), masterTarget);
+      const growth =
+        before != null && row.value != null ? row.value - before : null;
+      return {
+        ...row,
+        before,
+        growth,
+        bachelor,
+        master,
+        source: agreement?.source,
+      };
+    });
+    previous = new Map(rows.map((row) => [row.id, row.value]));
+    previousYear = year;
+    return rankSchools(rows, (row) => {
+      if (order === "awards") return row.value;
+      if (order === "growth") return row.growth;
+      const result = order.startsWith("bachelor") ? row.bachelor : row.master;
+      if (result.share == null) return null;
+      return order.endsWith("Closest")
+        ? -Math.abs(result.count - result.target) / result.target
+        : result.share;
+    });
+  });
+}
+
+function targetResult(count, target) {
+  return {
+    count,
+    target,
+    share: target > 0 && count != null ? count / target : null,
+  };
 }

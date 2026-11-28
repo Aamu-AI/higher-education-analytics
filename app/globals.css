@@ -962,3 +962,29 @@ footer button:hover {
   .ceiling-summary .share-track {min-width:0;}
   .ceiling-summary caption {white-space:normal;}
 }
+
+.awards-workspace {margin:16px 0;}
+.awards-workspace .ranking-order {display:flex; align-items:center; flex-wrap:wrap; gap:.65rem; font-weight:600;}
+.ranking-order select {background:var(--bg); color:var(--text); border:1px solid var(--line); border-radius:6px; padding:8px 12px; font:inherit;}
+.school-check {display:flex; align-items:center; gap:.55rem; cursor:pointer; min-height:30px; width:fit-content;}
+.school-check input {accent-color:var(--lime); width:16px; height:16px; margin:0; flex-shrink:0;}
+.annual-target strong, .annual-target small {display:block;}
+.annual-target small a {color:var(--muted);}
+.rankings-scroll {max-height:32rem; scrollbar-color:var(--muted) var(--panel);}
+.rankings-scroll thead th {position:sticky; top:0; background:var(--panel); z-index:1;}
+.rankings-scroll table {min-width:700px;}
+.awards-workspace .school-trend {max-height:320px;}
+
+@media (max-width:680px) {
+  .ranking-order select {max-width:100%;}
+  .rankings-scroll table {min-width:0;}
+  .rankings-scroll thead {position:absolute;width:1px;height:1px;overflow:hidden;clip-path:inset(50%);}
+  .rankings-scroll tbody {display:block;}
+  .rankings-scroll tbody tr {display:grid;grid-template-columns:repeat(3,minmax(0,1fr));padding:.55rem 0;border-bottom:1px solid var(--line);}
+  .rankings-scroll tbody tr.chosen {background:#2c3828;}
+  .rankings-scroll td,.rankings-scroll th[scope="row"] {padding:5px 6px;text-align:left;border:0;}
+  .rankings-scroll .annual-rank {grid-row:1;grid-column:3;text-align:right;}
+  .rankings-scroll th[scope="row"] {grid-row:1;grid-column:1/3;font-size:.95rem;}
+  .rankings-scroll td::before {content:attr(data-label);display:block;font-size:.7rem;color:var(--muted);}
+  .rankings-scroll .annual-rank::before {display:inline;margin-right:4px;}
+}

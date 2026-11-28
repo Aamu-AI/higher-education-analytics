@@ -1,5 +1,7 @@
-import { awardRanking } from "./comparisons";
+import { annualRankings, agreementPeriod, groups } from "./comparisons";
 import {
+  AWARD_ORDERS,
+  selectedSchools,
   awardCount,
   downloadCsv,
   FUNDING,
@@ -26,28 +28,32 @@ const schoolIds = (rows) =>
     .join(",");
 const change = (n) => (n > 0 ? "+" + n : String(n));
 
-function TrendLines({ series, years, rank, coverage }) {
-  const maximum = rank
+const trendLabels = {
+  count: "Degree counts",
+  growth: "Change in degrees",
+  rank: "Rank",
+};
+
+function TrendLines({ series, years, trend, coverage }) {
+  const rank = trend === "rank";
+  const values = series.flatMap((s) => s.values).filter((v) => v != null);
+  const low = rank ? 1 : Math.min(0, ...values);
+  const high = rank
     ? Math.max(2, ...coverage)
-    : Math.max(1, ...series.flatMap((s) => s.values).filter((v) => v != null));
+    : Math.max(low + 1, 0, ...values);
   const y = (v) =>
-    rank ? 18 + (142 * (v - 1)) / (maximum - 1) : 160 - (142 * v) / maximum;
+    rank
+      ? 18 + (142 * (v - low)) / (high - low)
+      : 160 - (142 * (v - low)) / (high - low);
   const x = (i) => 48 + (425 * i) / Math.max(1, years.length - 1);
-  const ticks = [
-    ...new Set([
-      rank ? 1 : maximum,
-      Math.round(maximum / 2),
-      rank ? maximum : 0,
-    ]),
-  ];
+  const middle = low < 0 && high > 0 ? 0 : Math.round((high + low) / 2);
+  const ticks = [...new Set([high, middle, low])];
   return (
     <svg
       className="school-trend"
       viewBox="0 0 500 194"
       role="img"
-      aria-label={
-        rank ? "Institution ranks over time" : "Degree counts over time"
-      }
+      aria-label={trendLabels[trend] + " over time"}
     >
       {ticks.map((t) => (
         <g key={t}>
@@ -95,28 +101,50 @@ function TrendLines({ series, years, rank, coverage }) {
   );
 }
 
-export default function AwardComparison({ dataset, selection, set }) {
-  const { institution, comparison, field, year, level, funding, trend, peers } =
-    selection;
-  const { years } = dataset.metadata;
-  const history = years.map((y) =>
-    awardRanking(dataset, { ...selection, year: y }),
+const percentage = new Intl.NumberFormat("en-GB", {
+  style: "percent",
+  maximumFractionDigits: 1,
+});
+
+function TargetCell({ result, source, heading }) {
+  if (result.share == null) return <td data-label={heading}>Unavailable</td>;
+  return (
+    <td className="annual-target" data-label={heading}>
+      <strong>{percentage.format(result.share)}</strong>
+      <small>
+        <a href={source}>
+          {label(result.count)} / {label(result.target)}
+        </a>
+      </small>
+    </td>
   );
+}
+
+export default function AwardComparison({ dataset, selection, set }) {
+  const { institution, field, year, level, funding, trend } = selection;
+  const { years } = dataset.metadata;
+  const group = groups.find((g) => g.fields.includes(field));
+  const showBachelor = level !== "master";
+  const showMaster = level !== "bachelor";
+  const orders = Object.entries(AWARD_ORDERS).filter(
+    ([key]) =>
+      !(key.startsWith("bachelor") && !showBachelor) &&
+      !(key.startsWith("master") && (!showMaster || group)),
+  );
+  const order = orders.some(([key]) => key === selection.order)
+    ? selection.order
+    : "awards";
+  const history = annualRankings(dataset, selection, order);
   const index = years.indexOf(Number(year));
   const current = history[index];
   const own = current.find((row) => row.id === institution);
   const prior = history[index - 1] ?? [];
   const comparable =
     years[index - 1] === Number(year) - 1 &&
-    schoolIds(current) === schoolIds(prior);
-  const peerIds = peers ? peers.split(",") : [];
-  const ids = [
-    ...new Set([
-      institution,
-      ...(comparison === "sector" ? [] : [comparison]),
-      ...peerIds,
-    ]),
-  ];
+    schoolIds(current) === schoolIds(prior) &&
+    (["awards", "growth"].includes(order) ||
+      agreementPeriod(year) === agreementPeriod(year - 1));
+  const ids = selectedSchools(selection);
   const rank = trend === "rank";
   const coverage = history.map(
     (rows) => rows.filter((r) => r.rank != null).length,
@@ -125,7 +153,8 @@ export default function AwardComparison({ dataset, selection, set }) {
     id,
     name: dataset.institutions[id],
     values: history.map(
-      (rows) => rows.find((r) => r.id === id)[rank ? "rank" : "value"],
+      (rows) =>
+        rows.find((r) => r.id === id)[trend === "count" ? "value" : trend],
     ),
   }));
   const rankChange = (row) => {
@@ -135,13 +164,10 @@ export default function AwardComparison({ dataset, selection, set }) {
       : null;
   };
   function toggle(id) {
-    set(
-      "peers",
-      (peerIds.includes(id)
-        ? peerIds.filter((p) => p !== id)
-        : [...peerIds, id]
-      ).join(","),
-    );
+    const next = ids.includes(id)
+      ? ids.filter((school) => school !== id)
+      : [...ids, id];
+    set("schools", next.join(",") || "none");
   }
   const scope = `${field ? dataset.fields[field] : "All fields"} · ${LEVELS[level]} · ${FUNDING[funding]}`;
   function exportResults() {
@@ -155,6 +181,18 @@ export default function AwardComparison({ dataset, selection, set }) {
         "Field",
         "Counting rule",
         "Awards",
+        "Previous awards",
+        "Additional degrees",
+        "Ranked by",
+        "Bachelor’s eligible awards",
+        "Bachelor’s target",
+        "Bachelor’s target (%)",
+        "Master’s awards",
+        "Master’s target",
+        "Master’s target (%)",
+        "Agreement period",
+        "Bachelor’s target scope",
+        "Agreement source",
         "Rank",
         "Change in rank",
         "Schools ranked",
@@ -172,6 +210,18 @@ export default function AwardComparison({ dataset, selection, set }) {
         field || "All fields",
         FUNDING[funding],
         row.value,
+        row.before,
+        row.growth,
+        AWARD_ORDERS[order],
+        row.bachelor.count,
+        row.bachelor.target,
+        row.bachelor.share == null ? null : 100 * row.bachelor.share,
+        row.master.count,
+        row.master.target,
+        row.master.share == null ? null : 100 * row.master.share,
+        agreementPeriod(years[i]),
+        group?.name ?? "Institution",
+        row.source,
         row.rank,
         delta,
         coverage[i],
@@ -189,48 +239,7 @@ export default function AwardComparison({ dataset, selection, set }) {
   }
   return (
     <>
-      {comparison !== "sector" && (
-        <section className="panel funding-section">
-          <h2>Annual awards side by side</h2>
-          <p>
-            {year} · {LEVELS[level]} · {FUNDING[funding]}
-          </p>
-          <div className="table-scroll">
-            <table>
-              <caption className="sr">Awards by school and field</caption>
-              <thead>
-                <tr>
-                  <th>Field</th>
-                  {[institution, comparison].map((id) => (
-                    <th key={id}>{short(dataset.institutions[id])}</th>
-                  ))}
-                </tr>
-              </thead>
-              <tbody>
-                {Object.entries(dataset.fields)
-                  .filter(([f]) => !field || f === field)
-                  .map(([f, name]) => (
-                    <tr key={f}>
-                      <th scope="row">{name}</th>
-                      {[institution, comparison].map((id) => (
-                        <td key={id}>
-                          {label(
-                            awardCount(dataset, {
-                              ...selection,
-                              institution: id,
-                              field: f,
-                            }),
-                          )}
-                        </td>
-                      ))}
-                    </tr>
-                  ))}
-              </tbody>
-            </table>
-          </div>
-        </section>
-      )}
-      <div className="compare-grid awards-compare">
+      <div className="awards-workspace">
         <section className="panel funding-section">
           <h2>Institution rankings</h2>
           <p>
@@ -245,15 +254,55 @@ export default function AwardComparison({ dataset, selection, set }) {
             {own.rank == null ? "Unranked" : "Rank " + own.rank} ·{" "}
             {coverage[index]} schools ranked
           </p>
-          <p>Select a school to add its trend line.</p>
-          <div className="table-scroll">
+          <label className="ranking-order">
+            Rank schools by
+            <select
+              value={order}
+              onChange={(event) => set("order", event.target.value)}
+            >
+              {orders.map(([key, title]) => (
+                <option key={key} value={key}>
+                  {title}
+                </option>
+              ))}
+            </select>
+          </label>
+          <p>
+            Check schools to compare them.{" "}
+            <a href="#school-trends">View chart ({ids.length} selected)</a>
+          </p>
+          <p className="funding-sources">
+            Target percentages use annual awards against the agreement’s annual
+            average target. Bachelor’s counts exclude commissioned education.
+            Master’s counts include all funding sources.
+            {group && (
+              <>
+                {" "}
+                The bachelor’s comparison covers the whole {group.name} group.
+                Master’s field targets are unavailable.
+              </>
+            )}
+            {!agreementPeriod(year) && (
+              <> Agreement targets are unavailable for {year}.</>
+            )}
+          </p>
+          <div
+            className="table-scroll rankings-scroll"
+            role="region"
+            aria-label="Scrollable school rankings"
+            tabIndex={0}
+          >
             <table>
               <caption className="sr">Annual institution rankings</caption>
               <thead>
                 <tr>
                   <th>Rank</th>
                   <th className="align-left">Institution</th>
-                  <th>Awards</th>
+                  <th>{year} awards</th>
+                  <th>{year - 1} awards</th>
+                  <th>Change in degrees</th>
+                  {showBachelor && <th>Bachelor’s target reached</th>}
+                  {showMaster && <th>Master’s target reached</th>}
                   <th>Rank change</th>
                 </tr>
               </thead>
@@ -263,25 +312,45 @@ export default function AwardComparison({ dataset, selection, set }) {
                     key={row.id}
                     className={ids.includes(row.id) ? "chosen" : ""}
                   >
-                    <td>{row.rank ?? "—"}</td>
+                    <td className="annual-rank" data-label="Rank">
+                      {row.rank ?? "—"}
+                    </td>
                     <th scope="row">
-                      <button
-                        className="text-btn"
-                        aria-pressed={ids.includes(row.id)}
-                        disabled={
-                          row.id === institution || row.id === comparison
-                        }
-                        onClick={() => toggle(row.id)}
-                      >
+                      <label className="school-check">
+                        <input
+                          type="checkbox"
+                          checked={ids.includes(row.id)}
+                          onChange={() => toggle(row.id)}
+                        />
                         {short(row.name)}
-                      </button>
+                      </label>
                     </th>
-                    <td>
+                    <td data-label={year + " awards"}>
                       {row.value == null
                         ? "No published count"
                         : label(row.value)}
                     </td>
-                    <td>
+                    <td data-label={year - 1 + " awards"}>
+                      {label(row.before)}
+                    </td>
+                    <td data-label="Award change">
+                      {row.growth == null ? "Unavailable" : change(row.growth)}
+                    </td>
+                    {showBachelor && (
+                      <TargetCell
+                        heading="Bachelor’s target"
+                        result={row.bachelor}
+                        source={row.source}
+                      />
+                    )}
+                    {showMaster && (
+                      <TargetCell
+                        heading="Master’s target"
+                        result={row.master}
+                        source={row.source}
+                      />
+                    )}
+                    <td data-label="Rank change">
                       {rankChange(row) == null ? "" : change(rankChange(row))}
                     </td>
                   </tr>
@@ -290,19 +359,26 @@ export default function AwardComparison({ dataset, selection, set }) {
             </table>
           </div>
           <p className="funding-sources">
-            Positive change means a higher rank than last year. Blank cells
-            indicate that the positions cannot be compared.
+            Positive rank change means a higher position than last year under
+            the selected ranking. Blank cells indicate that the positions cannot
+            be compared.
           </p>
           <button className="export" onClick={exportResults}>
             Export ranking and trend CSV
           </button>
         </section>
         <section className="panel funding-section">
-          <h2>School trends</h2>
-          <p>{scope}</p>
+          <h2 id="school-trends" tabIndex={-1}>
+            School trends
+          </h2>
+          <p>
+            {scope}
+            {rank && <> · {AWARD_ORDERS[order]}</>}
+          </p>
           <div className="viz-switch" role="group" aria-label="Trend measure">
             {[
               ["count", "Degree counts"],
+              ["growth", "Change in degrees"],
               ["rank", "Rank over time"],
             ].map(([mode, name]) => (
               <button
@@ -322,15 +398,19 @@ export default function AwardComparison({ dataset, selection, set }) {
               </span>
             ))}
           </div>
-          <TrendLines
-            series={series}
-            years={years}
-            rank={rank}
-            coverage={coverage}
-          />
+          {ids.length === 0 ? (
+            <p>Check a school in the ranking to see its trend.</p>
+          ) : (
+            <TrendLines
+              series={series}
+              years={years}
+              trend={trend}
+              coverage={coverage}
+            />
+          )}
           <div className="table-scroll">
             <table>
-              <caption>{rank ? "Rank" : "Degree counts"} by year</caption>
+              <caption>{trendLabels[trend]} by year</caption>
               <thead>
                 <tr>
                   <th>Year</th>
@@ -355,6 +435,81 @@ export default function AwardComparison({ dataset, selection, set }) {
           </div>
         </section>
       </div>
+      {ids.length > 1 && (
+        <section className="panel funding-section">
+          <h2>Annual awards side by side</h2>
+          <p>
+            {year} · {LEVELS[level]} · {FUNDING[funding]}
+          </p>
+          <div className="table-scroll">
+            <table>
+              <caption className="sr">Awards by school and field</caption>
+              <thead>
+                <tr>
+                  <th>Field</th>
+                  {ids.map((id) => (
+                    <th key={id}>{short(dataset.institutions[id])}</th>
+                  ))}
+                </tr>
+              </thead>
+              <tbody>
+                {Object.entries(dataset.fields)
+                  .filter(([f]) => !field || f === field)
+                  .map(([f, name]) => (
+                    <tr key={f}>
+                      <th scope="row">{name}</th>
+                      {ids.map((id) => (
+                        <td key={id}>
+                          {label(
+                            awardCount(dataset, {
+                              ...selection,
+                              institution: id,
+                              field: f,
+                            }),
+                          )}
+                        </td>
+                      ))}
+                    </tr>
+                  ))}
+              </tbody>
+              <tfoot>
+                <tr>
+                  <th scope="row">
+                    {field ? "Selected field awards" : "Total awards"}
+                  </th>
+                  {ids.map((id) => (
+                    <td key={id}>
+                      {label(current.find((row) => row.id === id).value)}
+                    </td>
+                  ))}
+                </tr>
+                {[
+                  ...(showBachelor ? ["bachelor"] : []),
+                  ...(showMaster ? ["master"] : []),
+                ].map((key) => (
+                  <tr key={key}>
+                    <th scope="row">
+                      {key === "bachelor" ? "Bachelor’s" : "Master’s"} target
+                      reached
+                      {key === "bachelor" && group ? " · " + group.name : ""}
+                    </th>
+                    {ids.map((id) => {
+                      const row = current.find((school) => school.id === id);
+                      return (
+                        <TargetCell
+                          key={id}
+                          result={row[key]}
+                          source={row.source}
+                        />
+                      );
+                    })}
+                  </tr>
+                ))}
+              </tfoot>
+            </table>
+          </div>
+        </section>
+      )}
     </>
   );
 }

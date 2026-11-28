@@ -23,3 +23,13 @@ The public AVOP API catalogue still lacks a UAS question result set. The named V
 The independent API build and the PostgreSQL snapshot produced identical releases containing 1,601 school, field, level and year aggregates. A repeated import retained the six original release identifiers and reproduced the snapshot. Six disposable-database tests cover import validation, retry, correction, rollback and concurrent publication.
 
 The production build passed eight browser tests, including confirmed zero versus missing awards, ceiling scope, both counting rules, rank and count trends, peer retention, keyboard navigation and downloads. The Funding, ICT comparison and Degree awards views had no automated WCAG A/AA findings at 1440, 390 and 320 pixels. The narrow layout exposed tables and row and column headers in Chromium’s accessibility tree. Keyboard selection of ICT moved focus to its two comparisons. Manual screen-reader listening and staff usability sessions are outstanding.
+
+## Annual target and growth rankings
+
+Managers need to compare annual output with the ministry agreement at each degree level. Keep total awards under the selected counting rule. Beside the count, show the eligible bachelor's count excluding commissioned education and the all-funding master's count against their separate annual targets. The Funding view keeps its three-year calculation. A field selection uses the entire applicable bachelor's agreement group, named in the view. Master's targets apply institution-wide. Leave field-level master's attainment unavailable.
+
+Rank by total awards, year-on-year change in degrees, or attainment at either level. Closest means the smallest absolute distance from 100%. Highest share sorts attainment descending. Use the chosen ranking throughout the rank trend, change in position and CSV. A missing comparable input leaves a school unranked. Allow each school to be checked or unchecked; the chart and annual field table use the same selection.
+
+Acceptance includes Arcada in 2025 with 573 total, 562 last year, growth of 11, 477 of 635 bachelor's and 84 of 110 master's. Verify three-school comparisons, keyboard toggles, links and reloads, signed growth, missing targets and equal rankings.
+
+The 44 signed agreement extracts supply the master's annual target for each school and period. The 2020 target columns remain unavailable. The growth trend uses consecutive annual counts under the selected definition, and the earliest available year has no change value. The local production build and all nine browser tests passed. The three-school comparison passed automated accessibility checks at 320, 390 and 1440 pixels. Keyboard selection, reload, the ranking export and the mobile target layout were checked.

@@ -6,9 +6,25 @@ export const DEFAULTS = {
   level: "both",
   funding: "all",
   field: "",
-  peers: "",
+  schools: "",
+  order: "awards",
   trend: "count",
 };
+
+export const AWARD_ORDERS = {
+  awards: "Most awards",
+  growth: "Most additional degrees",
+  bachelorClosest: "Closest to bachelor’s target",
+  masterClosest: "Closest to master’s target",
+  bachelorHighest: "Highest bachelor’s target share",
+  masterHighest: "Highest master’s target share",
+};
+
+export function selectedSchools(selection) {
+  if (selection.schools === "none") return [];
+  if (selection.schools) return selection.schools.split(",");
+  return [...new Set([selection.institution, selection.comparison].filter(id => id !== "sector"))];
+}
 
 export const LEVELS = { both: "All levels", bachelor: "Bachelor’s", master: "Master’s" };
 export const FUNDING = { included: "Exclude commissioned", all: "All funding sources" };
@@ -24,13 +40,19 @@ export function readSelection(params, dataset) {
     level: Object.keys(LEVELS),
     funding: Object.keys(FUNDING),
     field: Object.keys(dataset.fields),
-    peers: [],
-    trend: ["count", "rank"],
+    schools: [],
+    order: Object.keys(AWARD_ORDERS),
+    trend: ["count", "growth", "rank"],
   };
   const selection = Object.fromEntries(Object.entries(DEFAULTS).map(([key, fallback]) => [
     key, allowed[key].includes(params.get(key)) ? params.get(key) : fallback,
   ]));
-  selection.peers = [...new Set((params.get("peers") ?? "").split(",").filter(id => Object.hasOwn(dataset.institutions, id)))].join(",");
+  const checked = (params.get("schools") ?? params.get("peers") ?? "").split(",").filter(id => Object.hasOwn(dataset.institutions, id));
+  if (params.get("schools") === "none") selection.schools = "none";
+  else if (checked.length) {
+    const ids = params.has("schools") ? checked : [...selectedSchools(selection), ...checked];
+    selection.schools = [...new Set(ids)].join(",");
+  }
   if (!params.has("view") && ["institution", "year", "level", "funding", "field"].some((key) => params.has(key))) {
     selection.view = "awards";
   }
