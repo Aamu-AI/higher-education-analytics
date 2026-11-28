@@ -183,12 +183,20 @@ class StoreTests(unittest.TestCase):
                                           (year,)).fetchone()[0], 1)
 
     def test_one_year_correction_preserves_other_releases_and_dates(self):
-        prior = {year: ingest(self.con, year, fixture(year)) for year in store.YEARS}
+        def with_starters(year):
+            rows = fixture(year)
+            if year == 2025:
+                row = next(row for row in rows if row["koodiKorkeakoulu"] == ARCADA)
+                row.update(koodiKoulutus=store.NURSING, uudetOpiskelijat=7)
+                rows.append(dict(row, rahoituslahde=COMMISSIONED, uudetOpiskelijat=9))
+            return rows
+
+        prior = {year: ingest(self.con, year, with_starters(year)) for year in store.YEARS}
         self.con.execute("UPDATE awards.release SET retrieved_at='2026-09-29 12:00:00+00' WHERE id=ANY(%s)",
                          (list(prior.values()),))
         current = {}
         for year in store.YEARS:
-            rows = fixture(year)
+            rows = with_starters(year)
             for row in rows:
                 row["tietojoukkoPaivitettyPvm"] = "2026-10-01"
             if year == 2024:
@@ -205,6 +213,8 @@ class StoreTests(unittest.TestCase):
             self.assertEqual(result["metadata"]["sourceStamp"], "2026-10-01")
             self.assertEqual(result["metadata"]["sourceStamps"], {
                 "2023": "2026-09-28", "2024": "2026-10-01", "2025": "2026-09-28"})
+            self.assertEqual(result["nursingStarters"], {"qualification": store.NURSING,
+                "records": [{"year": 2025, "institution": ARCADA, "count": 7}]})
             path_csv = Path(dest) / "degrees.csv"
             store.export_csv(self.con, path_csv)
             with path_csv.open(encoding="utf-8", newline="") as f:

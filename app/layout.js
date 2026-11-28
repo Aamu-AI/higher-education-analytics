@@ -2,9 +2,9 @@ import "@fontsource-variable/dm-sans";
 import "./globals.css";
 
 export const metadata = {
-  title: "Degree awards | Aamu Analytics",
+  title: "Funding and degree awards | Aamu Analytics",
   description:
-    "Explore final degree awards across Finnish universities of applied sciences.",
+    "Compare funding evidence and degree outcomes across Finnish universities of applied sciences.",
 };
 
 export default function RootLayout({ children }) {

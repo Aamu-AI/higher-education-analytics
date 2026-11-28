@@ -1,11 +1,11 @@
 # Validate the funding view with Arcada staff
 
-Run three 15-minute individual sessions. Start each participant on Degree awards. Ask them to think aloud, choose one action, name the person or role that owns it and say when they would review a result. Record their own words, path through the dashboard, source used and any ambiguity. The examples below are test expectations. No staff feedback has been collected.
+Run three 15-minute individual sessions. Start each participant on Funding. Ask them to find the shared comparison filter, think aloud, choose one action, name the person or role that owns it and say when they would review a result. Record their own words, path through the dashboard, source used and any ambiguity. The examples below are test expectations. No staff feedback has been collected.
 
 | Participant | Exercise | Observable result |
 | --- | --- | --- |
 | Manager | Prepare one sentence for the next leadership review about health and welfare. Find which part of the national model it relates to. | Identifies 205 awards versus the annual average target of 300, describes the 95-award gap and distinguishes the 56% national weight from Arcada’s published award. Chooses an owner for a cohort review and a date before a resource decision. |
-| Programme director | Compare how long the 2025 graduates took, then choose a qualification to investigate. | Reads 157/205 and 8,342/10,535 with the same period and population. Understands that the table excludes people yet to graduate and that national qualifications can contain several programmes. Names a process to check, such as placement scheduling, an owner and the next cohort review date. |
+| Programme director | Open Completion time from Funding and compare nursing with the same qualification across the sector. Then choose one peer and try 2024. | Reads 51/65 and 2,935/3,778, understands why the field comparison can differ, and explains why 2024 has no timing result. Names an owner and a date to review intakes by route and placement progress. |
 | Quality lead | Check where the completion result came from and reproduce one row using the CSV. Then compare the synthetic AVOP cases below. | Identifies the release and matched population, exports the count, identifies which survey issue supports a quality inquiry and which calls for a coverage review. Names the responsible role and next review date for each. |
 
 ## Synthetic AVOP exercise

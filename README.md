@@ -15,6 +15,8 @@ npm run dev
 
 Open [the local dashboard](http://localhost:3000). For a production check, run `npm run build`, `npx playwright install chromium` and `npm run test:browser`. The connected Vercel project builds the repository root using the Next.js preset.
 
+The local review version opens on Funding. The Degree awards and Completion time views share the institution, reporting year and comparison. The awards view is also available at `/?view=awards`.
+
 ## Refresh the degree data
 
 Point the standard PostgreSQL connection settings (`PGHOST`, `PGPORT`, `PGUSER`, `PGDATABASE`) at a local development database. With Python 3.10 or newer, run:
@@ -34,6 +36,7 @@ The import checks the public sources before activating a release. The dashboard 
 | [Independent review](docs/review.md) | Verdict, verified discrepancies and open decisions |
 | [First dashboard](docs/dashboard.md) | Scope, layout and acceptance criteria |
 | [Funding and completion strategy](docs/funding-strategy.md) | The first funding decision, release criteria and build order |
+| [Unified dashboard plan](docs/unified-dashboard.md) | Funding-first navigation, shared comparisons and evidence from the independent audit |
 | [Product and implementation plan](docs/plan.md) | User decisions, dashboard concept, milestones and acceptance criteria |
 | [Data inventory](docs/data.md) | Verified coverage, comparison limits, survey access and source terms |
 | [Architecture and operations](docs/architecture.md) | Proposed schema, imports, privacy, migration workflow, hosting and costs |

@@ -1,5 +1,7 @@
 # Funding decisions and first implementation
 
+The [unified dashboard plan](unified-dashboard.md) updates the navigation and scope after the independent audit.
+
 Use the funding model to identify outcomes staff can improve and review again, starting with Arcada’s health and welfare bachelor’s awards. The first view should put the observed gap and the distribution of completion times beside the ministry’s weighting. Arcada leadership can then choose whether to investigate progression, intake or both, assign an owner and set a review date.
 
 ## First increment

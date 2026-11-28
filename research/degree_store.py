@@ -14,7 +14,7 @@ from build_dashboard import (
     RESOURCE, SOURCE_KEY, YEARS, assemble, institution_names, summarize,
 )
 from check_arcada import (
-    ARCADA, BACHELOR, COMMISSIONED, LAUREA, REPORT, REPORT_MINUS_VIPUNEN,
+    ARCADA, BACHELOR, COMMISSIONED, LAUREA, NURSING, REPORT, REPORT_MINUS_VIPUNEN,
     check_arcada, check_sector, statfin, vipunen,
 )
 
@@ -173,8 +173,18 @@ def snapshot(connection):
     """, ([r[0] for r in manifest],)):
         records.append({"year": year, "institution": institution, "level": level, "field": field,
                         "all": all_count, "included": included})
+    starters = [{"year": year, "institution": institution, "count": count}
+                for year, institution, count in connection.execute("""
+        SELECT r.year, p.payload->>'koodiKorkeakoulu' AS institution,
+               sum(CASE WHEN p.payload->>'rahoituslahde' <> %s
+                        THEN (p.payload->>'uudetOpiskelijat')::int ELSE 0 END)
+        FROM awards.source_row p JOIN awards.release r ON r.id = p.release_id
+        WHERE r.id=ANY(%s) AND p.payload->>'koodiKoulutus'=%s
+          AND p.payload->>'uudetOpiskelijat' IS NOT NULL
+        GROUP BY 1, 2 ORDER BY 1, 2
+    """, (COMMISSIONED, [r[0] for r in manifest], NURSING))]
     release = assemble(records, max(r[2] for r in manifest).isoformat(),
-                       {str(r[1]): r[3] for r in manifest}, manifest[-1][4])
+                       {str(r[1]): r[3] for r in manifest}, manifest[-1][4], starters)
     # Unchanged years retain their original release across later source corrections.
     if len({r[2] for r in manifest}) > 1:
         release["metadata"]["sourceStamps"] = {str(r[1]): r[2].isoformat() for r in manifest}

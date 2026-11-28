@@ -5,7 +5,6 @@ import {
   ArrowDownToLine,
   BookOpen,
   Building2,
-  ChartNoAxesColumnIncreasing,
   ChevronDown,
   ChevronRight,
   CircleHelp,
@@ -24,23 +23,14 @@ import {
 } from "lucide-react";
 import { TrendPanel, BreakdownPanel } from "./charts";
 import { agreements } from "../data/institutions-config";
+import FundingOverview from "./funding/overview";
+import CompletionView from "./funding/completion";
+import { completion, scope as completionScope } from "./funding/results";
+import {
+  DEFAULTS, FUNDING, LEVELS, awardCount, comparisonAwards, comparisonName,
+  downloadCsv, makeCsv, readSelection, selectionUrl,
+} from "./report-selection";
 
-const DEFAULTS = {
-  institution: "02535",
-  year: "2025",
-  level: "both",
-  funding: "included",
-  field: "",
-};
-const LEVELS = {
-  both: "All levels",
-  bachelor: "Bachelor’s",
-  master: "Master’s",
-};
-const FUNDING = {
-  included: "Exclude commissioned",
-  all: "All funding sources",
-};
 const format = (value) =>
   value == null ? "—" : new Intl.NumberFormat("en-GB").format(value);
 const diff = (value, prior) =>
@@ -55,23 +45,6 @@ const shortName = (name) =>
     .replace(/^University of Applied Sciences /i, "");
 const shortField = (name) =>
   name === "Information and communication technology" ? "ICT" : name;
-
-function readFilters(data) {
-  const params = new URLSearchParams(window.location.search);
-  const allowed = {
-    institution: Object.keys(data.institutions),
-    year: data.metadata.years.map(String),
-    level: Object.keys(LEVELS),
-    funding: Object.keys(FUNDING),
-    field: Object.keys(data.fields),
-  };
-  return Object.fromEntries(
-    Object.entries(DEFAULTS).map(([key, fallback]) => [
-      key,
-      allowed[key].includes(params.get(key)) ? params.get(key) : fallback,
-    ]),
-  );
-}
 
 function SelectFilter({ label, value, options, change }) {
   return (
@@ -168,9 +141,10 @@ function SourceDialog({ dialog, data }) {
             Arcada’s 2025 agreement covers bachelor’s degrees excluding
             commissioned education. The field mapping awaits written
             confirmation.{" "}
-            <a href={agreements["02535"][2025].source}>
+              <a href={agreements["02535"][2025].source}>
               Annual report, Table 2
             </a>
+              {" "}The master’s target uses all funding sources. <a href={agreements["02535"][2025].agreementUrl}>Ministry agreement, p. 4</a>
           </dd>
           <dt>Source differences</dt>
           {m.knownDifferences.map((x) => (
@@ -205,9 +179,10 @@ export default function Dashboard({ dataset }) {
   const filterTrigger = useRef(null);
   const filterClose = useRef(null);
   const filterAside = useRef(null);
+  const main = useRef(null);
   useEffect(() => {
     function sync() {
-      setFilters(readFilters(dataset));
+      setFilters(readSelection(new URLSearchParams(window.location.search), dataset));
     }
     sync();
     window.addEventListener("popstate", sync);
@@ -240,40 +215,37 @@ export default function Dashboard({ dataset }) {
     return () => document.removeEventListener("keydown", handle);
   }, [sidebar]);
   function apply(next) {
+    if (next.comparison === next.institution) next = { ...next, comparison: "sector" };
     setFilters(next);
-    const params = new URLSearchParams();
-    for (const [k, v] of Object.entries(next))
-      if (v !== DEFAULTS[k]) params.set(k, v);
-    const search = params.toString();
-    window.history.pushState(
-      null,
-      "",
-      window.location.pathname + (search ? "?" + search : ""),
-    );
+    const url = selectionUrl(next);
+    if (url !== window.location.pathname + window.location.search) window.history.pushState(null, "", url);
   }
   const set = (key, value) => apply({ ...filters, [key]: value });
-  const { institution, level, funding, field } = filters;
+  const { institution, level, funding, field, comparison, view } = filters;
+  const isFunding = view === "funding";
+  const isAwards = view === "awards";
+  const reportTitle = isFunding ? "Funding" : "Degree awards";
   const year = Number(filters.year);
   const { years } = metadata;
   const institutionList = Object.entries(institutions).sort((a, b) =>
     a[1].localeCompare(b[1], "en"),
   );
-  function count(
-    y,
-    id = institution,
-    which = level,
-    policy = field,
-    measure = funding,
-  ) {
-    const hits = records.filter(
-      (r) =>
-        r.year === y &&
-        r.institution === id &&
-        (which === "both" || r.level === which) &&
-        (!policy || r.field === policy),
-    );
-    return hits.length ? hits.reduce((sum, r) => sum + r[measure], 0) : null;
+  function reportLink(next, label, { current, className } = {}) {
+    return <a className={className} href={selectionUrl(next)} aria-current={current ? "page" : undefined}
+      onClick={(event) => {
+        if (event.button !== 0 || event.metaKey || event.ctrlKey || event.shiftKey || event.altKey) return;
+        event.preventDefault();
+        apply(next);
+        main.current?.focus({ preventScroll: true });
+        window.scrollTo(0, 0);
+      }}>{label}</a>;
   }
+
+  function count(y, id = institution, which = level, policy = field, measure = funding) {
+    return awardCount(dataset, { year: y, institution: id, level: which, field: policy, funding: measure });
+  }
+  const compared = comparisonAwards(dataset, filters);
+  const compareLabel = comparisonName(dataset, comparison);
   const total = count(year),
     prior = count(year - 1),
     delta = diff(total, prior);
@@ -368,6 +340,13 @@ export default function Dashboard({ dataset }) {
       "Upstream source",
       "Licence",
       "Transformations",
+      "Scope",
+      "Benchmark institution codes",
+    ];
+    const provenance = [
+      metadata.unit, metadata.releaseType, metadata.sourceStamps?.[year] ?? metadata.sourceStamp,
+      metadata.retrievedAt, metadata.releaseId, metadata.source, metadata.sourceUrl, metadata.upstream,
+      metadata.licenceUrl, metadata.transformations,
     ];
     const body = records
       .filter(
@@ -385,30 +364,14 @@ export default function Dashboard({ dataset }) {
         fields[r.field],
         FUNDING[funding],
         r[funding],
-        metadata.unit,
-        metadata.releaseType,
-        metadata.sourceStamps?.[r.year] ?? metadata.sourceStamp,
-        metadata.retrievedAt,
-        metadata.releaseId,
-        metadata.source,
-        metadata.sourceUrl,
-        metadata.upstream,
-        metadata.licenceUrl,
-        metadata.transformations,
+        ...provenance,
+        "Selected institution",
+        "",
       ]);
-    const contents = [headers, ...body]
-      .map((row) =>
-        row.map((v) => '"' + String(v).replaceAll('"', '""') + '"').join(","),
-      )
-      .join("\r\n");
-    const url = URL.createObjectURL(
-      new Blob(["\uFEFF", contents], { type: "text/csv;charset=utf-8" }),
-    );
-    const a = document.createElement("a");
-    a.href = url;
-    a.download = "degree-awards-" + institution + "-" + year + ".csv";
-    a.click();
-    setTimeout(() => URL.revokeObjectURL(url), 1000);
+    body.push([comparison === "sector" ? "" : comparison, compareLabel, year, LEVELS[level],
+      field ? fields[field] : "All fields", FUNDING[funding], compared.value, ...provenance,
+      "Selected comparison", comparison === "sector" ? compared.codes.join(" ") : ""]);
+    downloadCsv(makeCsv([headers, ...body]), `degree-awards-${institution}-${year}.csv`);
   }
   function closeFilters() {
     setSidebar(false);
@@ -444,15 +407,8 @@ export default function Dashboard({ dataset }) {
           </button>
         </div>
         <div className="side-inner">
-          <div className="side-label">Workspace</div>
-          <div className="active-report">
-            <ChartNoAxesColumnIncreasing size={18} />
-            <strong>Degree awards</strong>
-            <span />
-          </div>
-          <div className="side-rule" />
           <div className="filter-heading">
-            <span className="side-label">Report filters</span>
+            <span className="side-label">Shared filters</span>
             <SlidersHorizontal size={14} />
           </div>
           <SelectFilter
@@ -467,6 +423,16 @@ export default function Dashboard({ dataset }) {
             options={years.toReversed().map((y) => [String(y), String(y)])}
             change={(v) => set("year", v)}
           />
+          <SelectFilter
+            label="Compare with"
+            value={comparison}
+            options={[["sector", "Finnish UAS sector"], ...institutionList.filter(([id]) => id !== institution)
+              .map(([id, name]) => [id, shortName(name)])]}
+            change={(v) => set("comparison", v)}
+          />
+          {!isFunding && <>
+          <div className="side-rule" />
+          <div className="filter-heading"><span className="side-label">Degree filters</span></div>
           <SelectFilter
             label="Degree level"
             value={level}
@@ -490,7 +456,8 @@ export default function Dashboard({ dataset }) {
             options={Object.entries(FUNDING)}
             change={(v) => set("funding", v)}
           />
-          <button className="reset" onClick={() => apply(DEFAULTS)}>
+          </>}
+          <button className="reset" onClick={() => apply({ ...DEFAULTS, view })}>
             <RotateCcw size={14} />
             Reset filters
           </button>
@@ -506,20 +473,10 @@ export default function Dashboard({ dataset }) {
       <div className="main">
         <header className="top">
           <div className="crumb">
-            <button
-              ref={filterTrigger}
-              className="mobile-toggle"
-              aria-label="Open filters"
-              aria-expanded={sidebar}
-              aria-controls="filters"
-              onClick={() => setSidebar(true)}
-            >
-              <Menu size={20} />
-            </button>
             <Layers3 size={16} />
             <span>Analytics</span>
             <ChevronRight size={13} />
-            <b>Degree awards</b>
+            <b>{reportTitle}</b>
           </div>
           <button
             className="source-link"
@@ -528,32 +485,49 @@ export default function Dashboard({ dataset }) {
             <BookOpen size={15} /> <span>Source notes</span>
           </button>
         </header>
-        <main id="content" className="content">
+        <nav className="workspace-nav" aria-label="Dashboard views">
+          {reportLink({ ...filters, view: "funding" }, "Funding", { current: isFunding })}
+          {reportLink({ ...filters, view: "awards" }, "Degree awards", { current: !isFunding })}
+          <button ref={filterTrigger} className="mobile-toggle" aria-label="Open filters"
+            aria-expanded={sidebar} aria-controls="filters" onClick={() => setSidebar(true)}>
+            <Menu size={18} aria-hidden="true" /> Filters
+          </button>
+        </nav>
+        <main id="content" className="content" tabIndex={-1} ref={main}>
           <div className="title-row">
             <div>
               <div className="context">
                 <span className="live-dot" /> Final statistics{" "}
                 <span className="dot-sep">/</span> Finnish higher education
               </div>
-              <h1>Degree awards</h1>
+              <h1>{reportTitle}</h1>
               <p className="subtitle">
                 <Building2 size={15} />
                 {institutions[institution]}
                 <span className="dot-sep">·</span>
                 {year}
               </p>
-              <a className="related-report" href="/funding">Funding and completion time</a>
             </div>
-            <button
+            {isAwards && <button
               className="export"
-              disabled={total == null}
-              title={total == null ? "No observed rows to export" : undefined}
+              disabled={total == null && compared.value == null}
               onClick={exportCsv}
             >
               <ArrowDownToLine size={16} />
               Export CSV
-            </button>
+            </button>}
           </div>
+          {!isFunding && <nav className="degree-nav" aria-label="Degree measures">
+            {reportLink({ ...filters, view: "awards" }, "Awards", { current: isAwards })}
+            {reportLink({ ...filters, view: "completion" }, "Completion time", { current: !isAwards })}
+          </nav>}
+          {isFunding && <FundingOverview dataset={dataset} selection={filters} completionLink={reportLink(
+            { ...filters, ...completionScope, view: "completion" }, "View completion times", { className: "report-action" },
+          )} />}
+          {view === "completion" && <CompletionView dataset={dataset} selection={filters} verifiedLink={reportLink(
+            { ...filters, ...completionScope, year: String(completion.year) }, "Open the verified 2025 comparison", { className: "report-action" },
+          )} />}
+          {isAwards && <>
           <div className="metrics">
             <Metric
               accent
@@ -566,6 +540,11 @@ export default function Dashboard({ dataset }) {
               }
             >
               {format(total)}
+            </Metric>
+            <Metric label="Selected comparison" icon={Building2}
+              note={compared.value == null ? `Unavailable · ${compareLabel}` : comparison === "sector" ?
+                `${compareLabel} · ${compared.codes.length} institutions with published counts` : compareLabel}>
+              {format(compared.value)}
             </Metric>
             <Metric
               label="Year-on-year change"
@@ -776,6 +755,7 @@ export default function Dashboard({ dataset }) {
               Definitions and attribution <ExternalLink size={12} />
             </button>
           </footer>
+          </>}
         </main>
       </div>
       <SourceDialog dialog={dialog} data={dataset} />

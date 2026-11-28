@@ -1,44 +1,81 @@
 import { readFile } from "node:fs/promises";
 import { expect, test } from "@playwright/test";
 
-test("degree awards links to a reconciled completion comparison and download", async ({ page }) => {
+test("Funding leads to the reconciled completion and qualification comparisons", async ({ page }) => {
   await page.goto("/");
-  await page.getByRole("link", { name: "Funding and completion time" }).click();
-  await expect(page.getByRole("heading", { level: 1 })).toHaveText("Funding and completion time");
+  await expect(page.getByRole("heading", { level: 1 })).toHaveText("Funding");
   await expect(page.getByText("205 of 300", { exact: true })).toBeVisible();
+  await expect(page.getByText("84 of 110", { exact: true })).toBeVisible();
+  await expect(page.getByText("2023 (72) · 2024 (177) · 2025 (304)", { exact: false })).toBeVisible();
+  await page.getByRole("link", { name: "View completion times" }).click();
+  await expect(page.getByRole("heading", { level: 1 })).toHaveText("Degree awards");
+  await expect(page.getByRole("combobox", { name: "Institution", exact: true })).toHaveValue("02535");
+  await expect(page.getByLabel("Reporting year")).toHaveValue("2025");
+  await expect(page.getByLabel("Degree level")).toHaveValue("bachelor");
+  await expect(page.getByLabel("Field of education")).toHaveValue("Terveys- ja hyvinvointialat");
+  await expect(page.getByLabel("Funding definition")).toHaveValue("included");
   const comparison = page.getByRole("table", { name: "2025 completion times and award counts" });
   await expect(comparison.getByRole("row", { name: "On time 157 8,342" })).toBeVisible();
   await expect(comparison.getByRole("row", { name: "Total awards 205 10,535" })).toBeVisible();
   await expect(comparison.getByRole("row", { name: "Share on time 76.6% 79.2%" })).toBeVisible();
-  await expect(page.getByText("publisher update", { exact: false })).toBeVisible();
+  const nursing = page.getByRole("row", { name: /Sairaanhoitaja \(AMK\) 671101/ });
+  await expect(nursing).toContainText("51 of 65");
+  await expect(nursing).toContainText("2,935 of 3,778");
+
   const event = page.waitForEvent("download");
-  await page.getByRole("link", { name: "Download completion CSV" }).click();
+  await page.getByRole("button", { name: "Download completion CSV" }).click();
   const download = await event;
   expect(download.suggestedFilename()).toBe("completion-time-2025.csv");
   const csv = await readFile(await download.path(), "utf8");
   expect(csv).toContain('"release_id","awards_input_hash","source","source_url"');
   expect(csv).toContain('"205","157","28","20","76.6","300"');
   expect(csv).toContain('"10535","8342","1497","696","79.2"');
-  expect(csv).toContain('"671101","Sairaanhoitaja (AMK)"');
-  await page.getByRole("link", { name: "Degree awards" }).click();
-  await expect(page.getByRole("heading", { level: 1 })).toHaveText("Degree awards");
+  expect(csv).toContain('"Finnish UAS sector","","671101","Sairaanhoitaja (AMK)"');
 });
 
-test("the funding page and its tables reflow with keyboard-operable details", async ({ page }) => {
+test("shared comparison follows the user and unsupported timing retains its filters", async ({ page }) => {
+  await page.goto("/");
+  await page.getByLabel("Compare with").selectOption("02629");
+  await page.getByRole("link", { name: "View completion times" }).click();
+  await expect(page).toHaveURL(/view=completion.*comparison=02629/);
+  await expect(page.getByRole("columnheader", { name: "Laurea University of Applied Sciences" }).first()).toBeVisible();
+  const ready = page.waitForEvent("download");
+  await page.getByRole("button", { name: "Download completion CSV" }).click();
+  const csv = await readFile(await (await ready).path(), "utf8");
+  expect(csv).toContain('"Laurea University of Applied Sciences","02629"');
+  expect(csv).not.toContain('"Finnish UAS sector"');
+  await page.reload();
+  await expect(page.getByLabel("Compare with")).toHaveValue("02629");
+  await page.getByLabel("Reporting year").selectOption("2024");
+  await expect(page.getByRole("heading", { name: "Completion time unavailable for this selection" })).toBeVisible();
+  await expect(page.getByLabel("Reporting year")).toHaveValue("2024");
+  await expect(page.getByLabel("Compare with")).toHaveValue("02629");
+  await expect(page.getByRole("button", { name: "Download completion CSV" })).toHaveCount(0);
+  await page.goBack();
+  await expect(page.getByLabel("Reporting year")).toHaveValue("2025");
+  await page.getByRole("link", { name: "Funding", exact: true }).click();
+  await expect(page.getByLabel("Compare with")).toHaveValue("02629");
+  await page.getByRole("link", { name: "Degree awards", exact: true }).click();
+  await expect(page.getByRole("region", { name: "Selected comparison" })).toContainText("Laurea University of Applied Sciences");
+  await expect(page.getByLabel("Field of education")).toHaveValue("Terveys- ja hyvinvointialat");
+  await page.getByRole("link", { name: "Completion time", exact: true }).click();
+  await page.getByLabel("Compare with").selectOption("10056");
+  await expect(page.getByText("Vipunen has no qualifying completion-time result for Haaga-Helia", { exact: false })).toBeVisible();
+  await expect(page.getByRole("row", { name: "Total awards 205 Unavailable" })).toBeVisible();
+});
+
+test("Funding and Completion time work from the keyboard at narrow width", async ({ page }) => {
   await page.setViewportSize({ width: 320, height: 800 });
-  await page.goto("/funding");
+  await page.goto("/");
   await page.keyboard.press("Tab");
-  await expect(page.getByRole("link", { name: "Skip to funding" })).toBeFocused();
+  await expect(page.getByRole("link", { name: "Skip to dashboard" })).toBeFocused();
   await page.keyboard.press("Enter");
   await expect(page.getByRole("main")).toBeFocused();
-  const qualifications = page.locator("summary").filter({ hasText: "Compare Arcada’s qualifications" });
-  for (let index = 0; index < 12 && !(await qualifications.evaluate((el) => el === document.activeElement)); index++) {
-    await page.keyboard.press("Tab");
-  }
-  await expect(qualifications).toBeFocused();
+  await page.keyboard.press("Tab");
+  await expect(page.getByRole("link", { name: "View completion times" })).toBeFocused();
   await page.keyboard.press("Enter");
+  await expect(page.getByRole("heading", { name: "Completion time", exact: true })).toBeVisible();
+  await expect(page.getByRole("button", { name: "Open filters" })).toBeInViewport();
   await expect(page.getByRole("table", { name: /national qualification/ }).getByRole("row").nth(7)).toBeVisible();
-  await page.getByText("See the national component weights").click();
-  await expect(page.getByRole("table", { name: /Components under/ }).getByRole("row", { name: "External R&D funding 12%" })).toBeVisible();
   expect(await page.evaluate(() => document.documentElement.scrollWidth)).toBe(320);
 });
